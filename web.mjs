@@ -9968,14 +9968,17 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    class $bss_task_deck extends $mol_list {
-        rows() {
-            return [
-                this.Block_list()
-            ];
+    class $bss_task_deck extends $mol_row {
+        sub() {
+            return this.block_list();
         }
         block_status(id) {
             return "";
+        }
+        add_task(id, next) {
+            if (next !== undefined)
+                return next;
+            return null;
         }
         task_name(id) {
             return "";
@@ -9993,20 +9996,31 @@ var $;
         Block(id) {
             const obj = new this.$.$bss_task_deck_block();
             obj.status = () => this.block_status(id);
+            obj.add = (next) => this.add_task(id, next);
             obj.tasks = () => this.task_list(id);
+            return obj;
+        }
+        add_block(next) {
+            if (next !== undefined)
+                return next;
+            return null;
+        }
+        Add_block() {
+            const obj = new this.$.$bss_task_deck_block();
+            obj.hint_new = () => "Добавить новую карточку";
+            obj.add = (next) => this.add_block(next);
             return obj;
         }
         block_list() {
             return [
-                this.Block("0")
+                this.Block("0"),
+                this.Add_block()
             ];
         }
-        Block_list() {
-            const obj = new this.$.$mol_row();
-            obj.sub = () => this.block_list();
-            return obj;
-        }
     }
+    __decorate([
+        $mol_mem_key
+    ], $bss_task_deck.prototype, "add_task", null);
     __decorate([
         $mol_mem_key
     ], $bss_task_deck.prototype, "Task", null);
@@ -10015,9 +10029,17 @@ var $;
     ], $bss_task_deck.prototype, "Block", null);
     __decorate([
         $mol_mem
-    ], $bss_task_deck.prototype, "Block_list", null);
+    ], $bss_task_deck.prototype, "add_block", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck.prototype, "Add_block", null);
     $.$bss_task_deck = $bss_task_deck;
     class $bss_task_deck_block extends $mol_list {
+        add(next) {
+            if (next !== undefined)
+                return next;
+            return null;
+        }
         rows() {
             return [
                 this.Status(),
@@ -10040,9 +10062,24 @@ var $;
             obj.rows = () => this.tasks();
             return obj;
         }
+        hint_new() {
+            return "Новая задача";
+        }
+        name(next) {
+            if (next !== undefined)
+                return next;
+            return "";
+        }
+        add_new(next) {
+            if (next !== undefined)
+                return next;
+            return null;
+        }
         New_task() {
             const obj = new this.$.$mol_string();
-            obj.hint = () => "Новая задача";
+            obj.hint = () => this.hint_new();
+            obj.value = (next) => this.name(next);
+            obj.submit = (next) => this.add_new(next);
             return obj;
         }
         Content() {
@@ -10056,10 +10093,19 @@ var $;
     }
     __decorate([
         $mol_mem
+    ], $bss_task_deck_block.prototype, "add", null);
+    __decorate([
+        $mol_mem
     ], $bss_task_deck_block.prototype, "Status", null);
     __decorate([
         $mol_mem
     ], $bss_task_deck_block.prototype, "Tasks", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_block.prototype, "name", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_block.prototype, "add_new", null);
     __decorate([
         $mol_mem
     ], $bss_task_deck_block.prototype, "New_task", null);
@@ -10095,14 +10141,15 @@ var $;
     var $$;
     (function ($$) {
         class $bss_task_deck extends $.$bss_task_deck {
-            block_data() {
-                return this.$.$bss_task_data();
+            model() {
+                const model = new this.$.$bss_task_deck_model;
+                return model;
             }
             block_list() {
-                return this.block_data().map(block => this.Block(block.id));
+                return [...this.model().data().map(block => this.Block(block.id)) || [], this.Add_block()];
             }
             get_block(id) {
-                return this.block_data().find(block => block.id === id);
+                return this.model().data().find(block => block.id === id);
             }
             block_status(id) {
                 return this.get_block(id)?.name ?? 'Имя не задано';
@@ -10112,15 +10159,32 @@ var $;
             }
             get_task(id) {
                 const [block_id, task_id] = id.split('__');
-                console.log('block_id', task_id);
                 return this.get_block(block_id)?.tasks?.find(task => task.id === task_id);
             }
             task_name(id) {
-                console.log(id);
                 return this.get_task(id)?.name ?? 'Задача не задана';
             }
+            add_task(id, value) {
+                console.log(id, value);
+                this.model().add_task(id, value);
+            }
+            add_block(value) {
+                this.model().add_block(value);
+            }
         }
+        __decorate([
+            $mol_mem
+        ], $bss_task_deck.prototype, "model", null);
         $$.$bss_task_deck = $bss_task_deck;
+        class $bss_task_deck_block extends $.$bss_task_deck_block {
+            add_new() {
+                if (this.name()) {
+                    this.add(this.name());
+                    this.name('');
+                }
+            }
+        }
+        $$.$bss_task_deck_block = $bss_task_deck_block;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
 //bss/task/deck/deck.view.ts
@@ -10128,7 +10192,72 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block] {\n\tbackground: lightgray;\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_block_new_task] {\n\tbackground-color: white;\n}\n\n[bss_task_deck_task] {\n\tbackground: white;\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task] + [bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}\n\n");
+    var $$;
+    (function ($$) {
+        class $bss_task_deck_model extends $.$mol_object {
+            data(next) {
+                console.log(next);
+                return next ? next : [
+                    {
+                        id: '1',
+                        name: 'В ожидании',
+                        tasks: [
+                            {
+                                id: '1_1',
+                                name: 'Создать сайт по макету',
+                            },
+                            {
+                                id: '1_2',
+                                name: 'Разработать дизайн геля для бритья'
+                            }
+                        ]
+                    },
+                    {
+                        id: '2',
+                        name: 'В процессе',
+                        tasks: [
+                            {
+                                id: '2_1',
+                                name: 'Разместить сайт на сервере',
+                            }
+                        ]
+                    },
+                    {
+                        id: '3',
+                        name: 'Готовые',
+                        tasks: []
+                    }
+                ];
+            }
+            add_task(id, value) {
+                const new_deck = this.data().map(block => block.id === id ? {
+                    ...block, tasks: [...block.tasks, {
+                            id: crypto.randomUUID(),
+                            name: value
+                        }]
+                } : block);
+                this.data(new_deck);
+            }
+            add_block(name) {
+                this.data([...this.data(), {
+                        id: crypto.randomUUID(),
+                        name,
+                        tasks: []
+                    }]);
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bss_task_deck_model.prototype, "data", null);
+        $$.$bss_task_deck_model = $bss_task_deck_model;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//bss/task/deck/deck.model.ts
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block] {\n\t/* background: lightgray; */\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_block_new_task] {\n\t/* background-color: white; */\n}\n\n[bss_task_deck_task] {\n\t/* background: white; */\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task] + [bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}\n\n");
 })($ || ($ = {}));
 //bss/task/deck/-css/deck.view.css.ts
 ;
