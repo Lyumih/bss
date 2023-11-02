@@ -212,6 +212,7 @@
     "$mol_embed_youtube",
     "$mol_icon_youtube",
     "$mol_frame",
+    "$mol_icon_delete",
     "$bss_task_deck_model"
   ],
   "dependencies": {

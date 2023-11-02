@@ -3009,6 +3009,12 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    class $mol_icon_delete extends $mol_icon {
+        path(): string;
+    }
+}
+
+declare namespace $ {
     class $mol_text_list extends $mol_text {
         auto_scroll(): any;
         attr(): Record<string, any>;
@@ -3029,19 +3035,28 @@ declare namespace $ {
         sub(): readonly any[];
         block_status(id: any): string;
         add_task(id: any, next?: any): any;
+        remove_block(id: any, next?: any): any;
         task_name(id: any): string;
+        remove_task(id: any, next?: any): any;
         Task(id: any): $bss_task_deck_task;
         task_list(id: any): readonly any[];
         Block(id: any): $$.$bss_task_deck_block;
-        add_block(next?: any): any;
-        Add_block(): $$.$bss_task_deck_block;
         block_list(): readonly any[];
+        Blocks(): $mol_row;
+        new_block(next?: any): string;
+        add_block(next?: any): any;
+        New_block(): $$.$mol_string;
+        Actions(): $mol_row;
     }
     class $bss_task_deck_block extends $mol_list {
         add(next?: any): any;
         rows(): readonly any[];
         status(): string;
         Status(): $$.$mol_text;
+        Remove_icon(): $mol_icon_delete;
+        remove(next?: any): any;
+        Remove(): $mol_button_minor;
+        Head(): $mol_row;
         tasks(): readonly $mol_view[];
         Tasks(): $$.$mol_list;
         hint_new(): string;
@@ -3050,10 +3065,13 @@ declare namespace $ {
         New_task(): $$.$mol_string;
         Content(): $$.$mol_list;
     }
-    class $bss_task_deck_task extends $mol_list {
-        rows(): readonly any[];
+    class $bss_task_deck_task extends $mol_row {
+        sub(): readonly any[];
         task_name(): string;
         Task(): $$.$mol_text;
+        Remove_icon(): $mol_icon_delete;
+        remove(next?: any): any;
+        Remove(): $mol_button_minor;
     }
 }
 
@@ -3085,11 +3103,13 @@ declare namespace $.$$ {
         block_list(): readonly $mol_view[];
         get_block(id: string): $bss_task_deck_model_Deck | undefined;
         block_status(id: string): string;
+        add_block(): void;
+        remove_block(next?: any): void;
         task_list(id: string): readonly $mol_view[];
         get_task(id: string): $bss_task_deck_model_Task | undefined;
-        task_name(id: any): string;
+        task_name(id: string): string;
         add_task(id: string, value: string): void;
-        add_block(value: string): void;
+        remove_task(id: string): void;
     }
     class $bss_task_deck_block extends $.$bss_task_deck_block {
         add_new(): void;

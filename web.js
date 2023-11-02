@@ -9917,6 +9917,18 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    class $mol_icon_delete extends $mol_icon {
+        path() {
+            return "M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19C6,20.1 6.9,21 8,21H16C17.1,21 18,20.1 18,19V7H6V19Z";
+        }
+    }
+    $.$mol_icon_delete = $mol_icon_delete;
+})($ || ($ = {}));
+//mol/icon/delete/-view.tree/delete.view.tree.ts
+;
+"use strict";
+var $;
+(function ($) {
     class $mol_text_list extends $mol_text {
         auto_scroll() {
             return null;
@@ -9968,7 +9980,10 @@ var $;
 (function ($) {
     class $bss_task_deck extends $mol_row {
         sub() {
-            return this.block_list();
+            return [
+                this.Blocks(),
+                this.Actions()
+            ];
         }
         block_status(id) {
             return "";
@@ -9978,12 +9993,23 @@ var $;
                 return next;
             return null;
         }
+        remove_block(id, next) {
+            if (next !== undefined)
+                return next;
+            return null;
+        }
         task_name(id) {
             return "";
+        }
+        remove_task(id, next) {
+            if (next !== undefined)
+                return next;
+            return null;
         }
         Task(id) {
             const obj = new this.$.$bss_task_deck_task();
             obj.task_name = () => this.task_name(id);
+            obj.remove = () => this.remove_task(id);
             return obj;
         }
         task_list(id) {
@@ -9995,30 +10021,54 @@ var $;
             const obj = new this.$.$bss_task_deck_block();
             obj.status = () => this.block_status(id);
             obj.add = (next) => this.add_task(id, next);
+            obj.remove = (next) => this.remove_block(id, next);
             obj.tasks = () => this.task_list(id);
             return obj;
+        }
+        block_list() {
+            return [
+                this.Block("0")
+            ];
+        }
+        Blocks() {
+            const obj = new this.$.$mol_row();
+            obj.sub = () => this.block_list();
+            return obj;
+        }
+        new_block(next) {
+            if (next !== undefined)
+                return next;
+            return "";
         }
         add_block(next) {
             if (next !== undefined)
                 return next;
             return null;
         }
-        Add_block() {
-            const obj = new this.$.$bss_task_deck_block();
-            obj.hint_new = () => "Добавить новую карточку";
-            obj.add = (next) => this.add_block(next);
+        New_block() {
+            const obj = new this.$.$mol_string();
+            obj.hint = () => "Добавить блок";
+            obj.value = (next) => this.new_block(next);
+            obj.submit = (next) => this.add_block(next);
             return obj;
         }
-        block_list() {
-            return [
-                this.Block("0"),
-                this.Add_block()
+        Actions() {
+            const obj = new this.$.$mol_row();
+            obj.sub = () => [
+                this.New_block()
             ];
+            return obj;
         }
     }
     __decorate([
         $mol_mem_key
     ], $bss_task_deck.prototype, "add_task", null);
+    __decorate([
+        $mol_mem_key
+    ], $bss_task_deck.prototype, "remove_block", null);
+    __decorate([
+        $mol_mem_key
+    ], $bss_task_deck.prototype, "remove_task", null);
     __decorate([
         $mol_mem_key
     ], $bss_task_deck.prototype, "Task", null);
@@ -10027,10 +10077,19 @@ var $;
     ], $bss_task_deck.prototype, "Block", null);
     __decorate([
         $mol_mem
+    ], $bss_task_deck.prototype, "Blocks", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck.prototype, "new_block", null);
+    __decorate([
+        $mol_mem
     ], $bss_task_deck.prototype, "add_block", null);
     __decorate([
         $mol_mem
-    ], $bss_task_deck.prototype, "Add_block", null);
+    ], $bss_task_deck.prototype, "New_block", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck.prototype, "Actions", null);
     $.$bss_task_deck = $bss_task_deck;
     class $bss_task_deck_block extends $mol_list {
         add(next) {
@@ -10040,7 +10099,7 @@ var $;
         }
         rows() {
             return [
-                this.Status(),
+                this.Head(),
                 this.Content()
             ];
         }
@@ -10050,6 +10109,32 @@ var $;
         Status() {
             const obj = new this.$.$mol_text();
             obj.text = () => this.status();
+            return obj;
+        }
+        Remove_icon() {
+            const obj = new this.$.$mol_icon_delete();
+            return obj;
+        }
+        remove(next) {
+            if (next !== undefined)
+                return next;
+            return null;
+        }
+        Remove() {
+            const obj = new this.$.$mol_button_minor();
+            obj.hint = () => "Удалить блок";
+            obj.sub = () => [
+                this.Remove_icon()
+            ];
+            obj.click = (next) => this.remove(next);
+            return obj;
+        }
+        Head() {
+            const obj = new this.$.$mol_row();
+            obj.sub = () => [
+                this.Status(),
+                this.Remove()
+            ];
             return obj;
         }
         tasks() {
@@ -10097,6 +10182,18 @@ var $;
     ], $bss_task_deck_block.prototype, "Status", null);
     __decorate([
         $mol_mem
+    ], $bss_task_deck_block.prototype, "Remove_icon", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_block.prototype, "remove", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_block.prototype, "Remove", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_block.prototype, "Head", null);
+    __decorate([
+        $mol_mem
     ], $bss_task_deck_block.prototype, "Tasks", null);
     __decorate([
         $mol_mem
@@ -10111,10 +10208,11 @@ var $;
         $mol_mem
     ], $bss_task_deck_block.prototype, "Content", null);
     $.$bss_task_deck_block = $bss_task_deck_block;
-    class $bss_task_deck_task extends $mol_list {
-        rows() {
+    class $bss_task_deck_task extends $mol_row {
+        sub() {
             return [
-                this.Task()
+                this.Task(),
+                this.Remove()
             ];
         }
         task_name() {
@@ -10125,10 +10223,37 @@ var $;
             obj.text = () => this.task_name();
             return obj;
         }
+        Remove_icon() {
+            const obj = new this.$.$mol_icon_delete();
+            return obj;
+        }
+        remove(next) {
+            if (next !== undefined)
+                return next;
+            return null;
+        }
+        Remove() {
+            const obj = new this.$.$mol_button_minor();
+            obj.hint = () => "Удалить задачу";
+            obj.sub = () => [
+                this.Remove_icon()
+            ];
+            obj.click = (next) => this.remove(next);
+            return obj;
+        }
     }
     __decorate([
         $mol_mem
     ], $bss_task_deck_task.prototype, "Task", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_task.prototype, "Remove_icon", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_task.prototype, "remove", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_task.prototype, "Remove", null);
     $.$bss_task_deck_task = $bss_task_deck_task;
 })($ || ($ = {}));
 //bss/task/deck/-view.tree/deck.view.tree.ts
@@ -10220,13 +10345,20 @@ var $;
                 return model;
             }
             block_list() {
-                return [...this.model().data().map(block => this.Block(block.id)) || [], this.Add_block()];
+                return this.model().data().map(block => this.Block(block.id)) || [];
             }
             get_block(id) {
                 return this.model().data().find(block => block.id === id);
             }
             block_status(id) {
                 return this.get_block(id)?.name ?? 'Имя не задано';
+            }
+            add_block() {
+                if (this.new_block)
+                    this.model().add_block(this.new_block());
+            }
+            remove_block(next) {
+                this.model().remove_block(next);
             }
             task_list(id) {
                 return this.get_block(id)?.tasks?.map(task => this.Task(`${id}__${task.id}`)) || [];
@@ -10241,8 +10373,9 @@ var $;
             add_task(id, value) {
                 this.model().add_task(id, value);
             }
-            add_block(value) {
-                this.model().add_block(value);
+            remove_task(id) {
+                const [block_id, task_id] = id.split('__');
+                this.model().remove_task(block_id, task_id);
             }
         }
         __decorate([
@@ -10265,7 +10398,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_task] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task] + [bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}\n\n");
+    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\t/* gap: 0.5rem; */\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_task] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task]+[bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}");
 })($ || ($ = {}));
 //bss/task/deck/-css/deck.view.css.ts
 ;

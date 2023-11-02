@@ -771,6 +771,8 @@ $mol_text_span $mol_paragraph
 		^
 		mol_text_type <= type \
 
+$mol_icon_delete $mol_icon path \M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19C6,20.1 6.9,21 8,21H16C17.1,21 18,20.1 18,19V7H6V19Z
+
 $mol_text_list $mol_text
 	auto_scroll null
 	attr *
@@ -786,22 +788,31 @@ $mol_text_list_item $mol_paragraph
 		mol_text_list_item_index <= index 0
 
 $bss_task_deck $mol_row
-	sub <= block_list /
-		<= Block*0 $bss_task_deck_block
-			status <= block_status* \
-			add? <=> add_task*? null
-			tasks <= task_list* /
-				<= Task*0__1 $bss_task_deck_task
-					task_name <= task_name* \
-		<= Add_block $bss_task_deck_block
-			hint_new \Добавить новую карточку
-			add? <=> add_block? null
-
+	sub /
+		<= Blocks $mol_row sub <= block_list /
+			<= Block*0 $bss_task_deck_block
+				status <= block_status* \
+				add? <=> add_task*? null
+				remove? <=> remove_block*? null
+				tasks <= task_list* /
+					<= Task*0__1 $bss_task_deck_task
+						task_name <= task_name* \
+						remove <= remove_task*? null
+		<= Actions $mol_row sub /
+			<= New_block $mol_string
+				hint \Добавить блок
+				value? <=> new_block? \
+				submit? <=> add_block? null
 
 $bss_task_deck_block $mol_list
 	add? null
 	rows /
-		<= Status $mol_text text <= status \
+		<= Head $mol_row sub /
+			<= Status $mol_text text <= status \
+			<= Remove $mol_button_minor
+				hint \Удалить блок
+				sub / <= Remove_icon $mol_icon_delete
+				click? <=> remove? null
 		<= Content $mol_list rows /
 			<= Tasks $mol_list rows <= tasks /$mol_view
 			<= New_task $mol_string
@@ -809,9 +820,13 @@ $bss_task_deck_block $mol_list
 				value? <=> name? \
 				submit? <=> add_new? null
 
-$bss_task_deck_task $mol_list
-	rows /
+$bss_task_deck_task $mol_row
+	sub /
 		<= Task $mol_text text <= task_name \
+		<= Remove $mol_button_minor
+			hint \Удалить задачу
+			sub / <= Remove_icon $mol_icon_delete
+			click? <=> remove? null
 
 $bss_task_auth $mol_list
 	rows /
