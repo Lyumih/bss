@@ -2,11 +2,12 @@ namespace $ {
 	export type $bss_task_deck_model_Deck = {
 		id: string
 		name: string
-		tasks:
-		{
-			id: string
-			name: string
-		}[]
+		tasks: $bss_task_deck_model_Task[]
+	}
+
+	export type $bss_task_deck_model_Task = {
+		id: string
+		name: string
 	}
 }
 
@@ -50,22 +51,38 @@ namespace $.$$ {
 			]
 		}
 
-		add_task( id: any, value: string ) {
+		generate_id(): string {
+			return crypto.randomUUID()
+		}
+
+		add_task( id: string, value: string ) {
 			const new_deck = this.data().map( block => block.id === id ? {
 				...block, tasks: [ ...block.tasks, {
-					id: crypto.randomUUID(),
+					id: this.generate_id(),
 					name: value
 				} ]
 			} : block )
 			this.data( new_deck )
 		}
 
-		add_block(name: string) {
-			this.data([ ...this.data(), {
-				id: crypto.randomUUID(),
+		add_block( name: string ) {
+			this.data( [ ...this.data(), {
+				id: this.generate_id(),
 				name,
 				tasks: []
-			}])
+			} ] )
 		}
+
+		remove_task( block_id: string, task_id: string ) {
+			const new_deck = this.data().map( block => block.id === block_id ? {
+				...block, tasks: block.tasks.filter( task => task.id !== task_id )
+			} : block )
+			this.data( new_deck )
+		}
+
+		remove_block( block_id: string ) {
+			this.data( this.data().filter( block => block.id !== block_id ) )
+		}
+
 	}
 }
