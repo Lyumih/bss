@@ -1,0 +1,3 @@
+$bss_task_deck $mol_list rows /
+	<= Column $mol_list rows /
+		<= Status $mol_text text \В ожидании

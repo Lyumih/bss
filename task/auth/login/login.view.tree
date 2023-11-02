@@ -15,6 +15,7 @@ $bss_task_auth_login $mol_form
 	buttons /
 		<= Login $mol_button_major
 			title \Войти
+			click? <=> login? null
 		<= Registration $mol_link
 			arg * page \registration
 			title \Создать новый аккаунт
