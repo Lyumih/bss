@@ -1,0 +1,5 @@
+$bss_task $mol_page
+	title \BSS Task
+	body /
+		<= Auth $mol_page
+		<= Deck $mol_page
