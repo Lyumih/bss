@@ -1,0 +1,46 @@
+$bss_task_auth_registration $mol_form
+	form_fields /
+		<= Name_field $mol_form_field
+			name \Имя
+			bid <= name_bid \
+			control <= Name_control $mol_string
+				value? <=> name? \
+		<= Surname_field $mol_form_field
+			name \Фамилия
+			bid <= surname_bid \
+			control <= Surname_control $mol_string
+				value? <=> surname? \
+		<= Email_field $mol_form_field
+			name \E-mail
+			bid <= email_bid \
+			control <= Email_control $mol_string
+				type \email
+				value? <=> email? \
+		<= Password_field $mol_form_field
+			name \Пароль
+			bid <= password_bid \
+			control <= Password_control $mol_string
+				type \password
+				value? <=> password? \
+		<= Password_repeat_field $mol_form_field
+			name \Подтвердите пароль
+			bid <= password_repeat_bid \
+			control <= Password_repeat_control $mol_string
+				type \password
+				value? <=> password_repeat? \
+		<= Position_field $mol_form_field
+			name \Должность
+			bid <= position_bid \
+			control <= Position_control $mol_select
+				value? <=> position? \
+				dictionary *
+					manager \Руководитель
+					designer \Дизайнер
+					copywriter \Копирайтер
+					programmer \Программист
+					layout_designer \Верстальщик
+	buttons /
+		<= Registration $mol_button_major
+			title \Зарегистрироваться
+		<= Login $mol_link
+			title \Войти

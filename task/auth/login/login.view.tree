@@ -1,0 +1,19 @@
+$bss_task_auth_login $mol_form
+	form_fields /
+		<= Email_field $mol_form_field
+			name \E-mail
+			bid <= email_bid \
+			control <= Email_control $mol_string
+				type \email
+				value? <=> email? \
+		<= Password_field $mol_form_field
+			name \Пароль
+			bid <= password_bid \
+			control <= Password_control $mol_string
+				type \password
+				value? <=> password? \
+	buttons /
+		<= Login $mol_button_major
+			title \Войти
+		<= Registration $mol_link
+			title \Создать новый аккаунт
