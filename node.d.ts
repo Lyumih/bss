@@ -3044,6 +3044,8 @@ declare namespace $ {
         Status(): $$.$mol_text;
         tasks(): readonly $mol_view[];
         Tasks(): $$.$mol_list;
+        New_task(): $$.$mol_string;
+        Content(): $$.$mol_list;
     }
     class $bss_task_deck_task extends $mol_list {
         rows(): readonly any[];

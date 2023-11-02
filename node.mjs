@@ -10645,7 +10645,7 @@ var $;
         rows() {
             return [
                 this.Status(),
-                this.Tasks()
+                this.Content()
             ];
         }
         status() {
@@ -10664,6 +10664,19 @@ var $;
             obj.rows = () => this.tasks();
             return obj;
         }
+        New_task() {
+            const obj = new this.$.$mol_string();
+            obj.hint = () => "Новая задача";
+            return obj;
+        }
+        Content() {
+            const obj = new this.$.$mol_list();
+            obj.rows = () => [
+                this.Tasks(),
+                this.New_task()
+            ];
+            return obj;
+        }
     }
     __decorate([
         $mol_mem
@@ -10671,6 +10684,12 @@ var $;
     __decorate([
         $mol_mem
     ], $bss_task_deck_block.prototype, "Tasks", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_block.prototype, "New_task", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_block.prototype, "Content", null);
     $.$bss_task_deck_block = $bss_task_deck_block;
     class $bss_task_deck_task extends $mol_list {
         rows() {
@@ -10733,7 +10752,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task_list] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tmargin: 0.5rem;\n}\n");
+    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block] {\n\tbackground: lightgray;\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_block_new_task] {\n\tbackground-color: white;\n}\n\n[bss_task_deck_task] {\n\tbackground: white;\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task] + [bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}\n\n");
 })($ || ($ = {}));
 //bss/task/deck/-css/deck.view.css.ts
 ;

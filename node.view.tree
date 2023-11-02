@@ -795,7 +795,11 @@ $bss_task_deck $mol_list rows /
 
 $bss_task_deck_block $mol_list rows /
 	<= Status $mol_text text <= status \
-	<= Tasks $mol_list rows <= tasks /$mol_view
+	<= Content $mol_list rows /
+		<= Tasks $mol_list rows <= tasks /$mol_view
+		<= New_task $mol_string
+			hint \Новая задача
+
 
 $bss_task_deck_task $mol_list rows /
 	<= Task $mol_text text <= task_name \
