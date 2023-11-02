@@ -1,5 +1,5 @@
 [bss_task_deck_block] {
-	background: lightgray;
+	/* background: lightgray; */
 	border: 2px solid gray;
 	border-radius: 0.5rem;
 	padding: 0.5rem;
@@ -11,11 +11,11 @@
 }
 
 [bss_task_deck_block_new_task] {
-	background-color: white;
+	/* background-color: white; */
 }
 
 [bss_task_deck_task] {
-	background: white;
+	/* background: white; */
 	border: 2px solid gray;
 	border-radius: 0.5rem;
 }
