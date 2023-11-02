@@ -2259,12 +2259,18 @@ declare namespace $ {
     }
 }
 
+declare namespace $.$$ {
+    class $bss_task_auth extends $.$bss_task_auth {
+        rows(): readonly any[];
+    }
+}
+
 declare namespace $ {
     class $bss_task extends $mol_page {
         title(): string;
         attr(): Record<string, any>;
         body(): readonly any[];
-        Auth(): $bss_task_auth;
+        Auth(): $$.$bss_task_auth;
         Deck(): $mol_page;
     }
 }

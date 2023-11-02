@@ -4524,6 +4524,9 @@ var $;
         }
         Registration() {
             const obj = new this.$.$mol_link();
+            obj.arg = () => ({
+                page: "registration"
+            });
             obj.title = () => "Создать новый аккаунт";
             return obj;
         }
@@ -7193,7 +7196,7 @@ var $;
         position(next) {
             if (next !== undefined)
                 return next;
-            return "";
+            return "manager";
         }
         Position_control() {
             const obj = new this.$.$mol_select();
@@ -7221,6 +7224,9 @@ var $;
         }
         Login() {
             const obj = new this.$.$mol_link();
+            obj.arg = () => ({
+                page: ""
+            });
             obj.title = () => "Войти";
             return obj;
         }
@@ -7317,6 +7323,23 @@ var $;
     $.$bss_task_auth = $bss_task_auth;
 })($ || ($ = {}));
 //bss/task/auth/-view.tree/auth.view.tree.ts
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $bss_task_auth extends $.$bss_task_auth {
+            rows() {
+                const page = $mol_state_arg.value('page');
+                console.log(page);
+                return [page === 'registration' ? this.Registration() : this.Login()];
+            }
+        }
+        $$.$bss_task_auth = $bss_task_auth;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//bss/task/auth/auth.view.ts
 ;
 "use strict";
 var $;
