@@ -787,11 +787,18 @@ $mol_text_list_item $mol_paragraph
 
 $bss_task_deck $mol_list rows /
 	<= Block_list $mol_row sub <= block_list /
-		<= Block*0 $mol_list rows /
-			<= Status* $mol_text text <= block_status* \
-			<= Task_list* $mol_list rows <= task_list* /
-				<= Task*0_1 $mol_list rows /
-					<= Task_name* $mol_text text <= task_name* \
+		<= Block*0 $bss_task_deck_block
+			status <= block_status* \
+			tasks <= task_list* /
+				<= Task*0__1 $bss_task_deck_task
+					task_name <= task_name* \
+
+$bss_task_deck_block $mol_list rows /
+	<= Status $mol_text text <= status \
+	<= Tasks $mol_list rows <= tasks /$mol_view
+
+$bss_task_deck_task $mol_list rows /
+	<= Task $mol_text text <= task_name \
 
 $bss_task_auth $mol_list
 	rows /

@@ -3031,15 +3031,24 @@ declare namespace $ {
     class $bss_task_deck extends $mol_list {
         rows(): readonly any[];
         block_status(id: any): string;
-        Status(id: any): $$.$mol_text;
         task_name(id: any): string;
-        Task_name(id: any): $$.$mol_text;
-        Task(id: any): $$.$mol_list;
+        Task(id: any): $bss_task_deck_task;
         task_list(id: any): readonly any[];
-        Task_list(id: any): $$.$mol_list;
-        Block(id: any): $$.$mol_list;
+        Block(id: any): $bss_task_deck_block;
         block_list(): readonly any[];
         Block_list(): $mol_row;
+    }
+    class $bss_task_deck_block extends $mol_list {
+        rows(): readonly any[];
+        status(): string;
+        Status(): $$.$mol_text;
+        tasks(): readonly $mol_view[];
+        Tasks(): $$.$mol_list;
+    }
+    class $bss_task_deck_task extends $mol_list {
+        rows(): readonly any[];
+        task_name(): string;
+        Task(): $$.$mol_text;
     }
 }
 

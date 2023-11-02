@@ -9977,42 +9977,23 @@ var $;
         block_status(id) {
             return "";
         }
-        Status(id) {
-            const obj = new this.$.$mol_text();
-            obj.text = () => this.block_status(id);
-            return obj;
-        }
         task_name(id) {
             return "";
         }
-        Task_name(id) {
-            const obj = new this.$.$mol_text();
-            obj.text = () => this.task_name(id);
-            return obj;
-        }
         Task(id) {
-            const obj = new this.$.$mol_list();
-            obj.rows = () => [
-                this.Task_name(id)
-            ];
+            const obj = new this.$.$bss_task_deck_task();
+            obj.task_name = () => this.task_name(id);
             return obj;
         }
         task_list(id) {
             return [
-                this.Task("0_1")
+                this.Task("0__1")
             ];
-        }
-        Task_list(id) {
-            const obj = new this.$.$mol_list();
-            obj.rows = () => this.task_list(id);
-            return obj;
         }
         Block(id) {
-            const obj = new this.$.$mol_list();
-            obj.rows = () => [
-                this.Status(id),
-                this.Task_list(id)
-            ];
+            const obj = new this.$.$bss_task_deck_block();
+            obj.status = () => this.block_status(id);
+            obj.tasks = () => this.task_list(id);
             return obj;
         }
         block_list() {
@@ -10028,16 +10009,7 @@ var $;
     }
     __decorate([
         $mol_mem_key
-    ], $bss_task_deck.prototype, "Status", null);
-    __decorate([
-        $mol_mem_key
-    ], $bss_task_deck.prototype, "Task_name", null);
-    __decorate([
-        $mol_mem_key
     ], $bss_task_deck.prototype, "Task", null);
-    __decorate([
-        $mol_mem_key
-    ], $bss_task_deck.prototype, "Task_list", null);
     __decorate([
         $mol_mem_key
     ], $bss_task_deck.prototype, "Block", null);
@@ -10045,6 +10017,56 @@ var $;
         $mol_mem
     ], $bss_task_deck.prototype, "Block_list", null);
     $.$bss_task_deck = $bss_task_deck;
+    class $bss_task_deck_block extends $mol_list {
+        rows() {
+            return [
+                this.Status(),
+                this.Tasks()
+            ];
+        }
+        status() {
+            return "";
+        }
+        Status() {
+            const obj = new this.$.$mol_text();
+            obj.text = () => this.status();
+            return obj;
+        }
+        tasks() {
+            return [];
+        }
+        Tasks() {
+            const obj = new this.$.$mol_list();
+            obj.rows = () => this.tasks();
+            return obj;
+        }
+    }
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_block.prototype, "Status", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_block.prototype, "Tasks", null);
+    $.$bss_task_deck_block = $bss_task_deck_block;
+    class $bss_task_deck_task extends $mol_list {
+        rows() {
+            return [
+                this.Task()
+            ];
+        }
+        task_name() {
+            return "";
+        }
+        Task() {
+            const obj = new this.$.$mol_text();
+            obj.text = () => this.task_name();
+            return obj;
+        }
+    }
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_task.prototype, "Task", null);
+    $.$bss_task_deck_task = $bss_task_deck_task;
 })($ || ($ = {}));
 //bss/task/deck/-view.tree/deck.view.tree.ts
 ;
