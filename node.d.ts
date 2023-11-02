@@ -1037,9 +1037,6 @@ declare namespace $ {
 declare namespace $ {
     class $mol_plugin extends $mol_view {
         dom_node_external(next?: Element): Element;
-        attr_static(): {
-            [key: string]: string | number | boolean;
-        };
         render(): void;
     }
 }
@@ -3060,6 +3057,28 @@ declare namespace $ {
     }
 }
 
+declare namespace $ {
+    type $bss_task_deck_model_Deck = {
+        id: string;
+        name: string;
+        tasks: $bss_task_deck_model_Task[];
+    };
+    type $bss_task_deck_model_Task = {
+        id: string;
+        name: string;
+    };
+}
+declare namespace $.$$ {
+    class $bss_task_deck_model extends $.$mol_object {
+        data(next?: $bss_task_deck_model_Deck[]): $bss_task_deck_model_Deck[];
+        generate_id(): string;
+        add_task(id: string, value: string): void;
+        add_block(name: string): void;
+        remove_task(block_id: string, task_id: string): void;
+        remove_block(block_id: string): void;
+    }
+}
+
 declare namespace $.$$ {
     class $bss_task_deck extends $.$bss_task_deck {
         model(): $bss_task_deck_model;
@@ -3067,34 +3086,13 @@ declare namespace $.$$ {
         get_block(id: string): $bss_task_deck_model_Deck | undefined;
         block_status(id: string): string;
         task_list(id: string): readonly $mol_view[];
-        get_task(id: string): {
-            id: string;
-            name: string;
-        } | undefined;
+        get_task(id: string): $bss_task_deck_model_Task | undefined;
         task_name(id: any): string;
         add_task(id: string, value: string): void;
         add_block(value: string): void;
     }
     class $bss_task_deck_block extends $.$bss_task_deck_block {
         add_new(): void;
-    }
-}
-
-declare namespace $ {
-    type $bss_task_deck_model_Deck = {
-        id: string;
-        name: string;
-        tasks: {
-            id: string;
-            name: string;
-        }[];
-    };
-}
-declare namespace $.$$ {
-    class $bss_task_deck_model extends $.$mol_object {
-        data(next?: $bss_task_deck_model_Deck[]): $bss_task_deck_model_Deck[];
-        add_task(id: any, value: string): void;
-        add_block(name: string): void;
     }
 }
 

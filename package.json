@@ -211,7 +211,8 @@
     "$mol_promise_promise",
     "$mol_embed_youtube",
     "$mol_icon_youtube",
-    "$mol_frame"
+    "$mol_frame",
+    "$bss_task_deck_model"
   ],
   "dependencies": {
     "jsdom": "*",

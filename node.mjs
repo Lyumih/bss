@@ -2180,6 +2180,9 @@ var $;
     function $mol_dom_render_attributes(el, attrs) {
         for (let name in attrs) {
             let val = attrs[name];
+            if (val === undefined) {
+                continue;
+            }
             if (val === null || val === false) {
                 if (!el.hasAttribute(name))
                     continue;
@@ -2765,7 +2768,6 @@ var $;
             $mol_dom_render_styles(node, this.style_size());
             const attr = this.attr();
             const style = this.style();
-            const fields = this.field();
             $mol_dom_render_attributes(node, attr);
             $mol_dom_render_styles(node, style);
             return node;
@@ -2861,7 +2863,7 @@ var $;
         }
         attr() {
             return {
-                mol_theme: this.theme(),
+                mol_theme: this.theme() || undefined,
             };
         }
         style_size() {
@@ -3434,11 +3436,7 @@ var $;
 (function ($) {
     class $mol_plugin extends $mol_view {
         dom_node_external(next) {
-            const host = $mol_owning_get(this).host;
-            return next ?? host.dom_node();
-        }
-        attr_static() {
-            return {};
+            return next ?? $mol_owning_get(this).host.dom_node();
         }
         render() {
             this.dom_node_actual();
@@ -10764,60 +10762,6 @@ var $;
 (function ($) {
     var $$;
     (function ($$) {
-        class $bss_task_deck extends $.$bss_task_deck {
-            model() {
-                const model = new this.$.$bss_task_deck_model;
-                return model;
-            }
-            block_list() {
-                return [...this.model().data().map(block => this.Block(block.id)) || [], this.Add_block()];
-            }
-            get_block(id) {
-                return this.model().data().find(block => block.id === id);
-            }
-            block_status(id) {
-                return this.get_block(id)?.name ?? 'Имя не задано';
-            }
-            task_list(id) {
-                return this.get_block(id)?.tasks?.map(task => this.Task(`${id}__${task.id}`)) || [];
-            }
-            get_task(id) {
-                const [block_id, task_id] = id.split('__');
-                return this.get_block(block_id)?.tasks?.find(task => task.id === task_id);
-            }
-            task_name(id) {
-                return this.get_task(id)?.name ?? 'Задача не задана';
-            }
-            add_task(id, value) {
-                console.log(id, value);
-                this.model().add_task(id, value);
-            }
-            add_block(value) {
-                this.model().add_block(value);
-            }
-        }
-        __decorate([
-            $mol_mem
-        ], $bss_task_deck.prototype, "model", null);
-        $$.$bss_task_deck = $bss_task_deck;
-        class $bss_task_deck_block extends $.$bss_task_deck_block {
-            add_new() {
-                if (this.name()) {
-                    this.add(this.name());
-                    this.name('');
-                }
-            }
-        }
-        $$.$bss_task_deck_block = $bss_task_deck_block;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-//bss/task/deck/deck.view.ts
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
         class $bss_task_deck_model extends $.$mol_object {
             data(next) {
                 console.log(next);
@@ -10853,10 +10797,13 @@ var $;
                     }
                 ];
             }
+            generate_id() {
+                return crypto.randomUUID();
+            }
             add_task(id, value) {
                 const new_deck = this.data().map(block => block.id === id ? {
                     ...block, tasks: [...block.tasks, {
-                            id: crypto.randomUUID(),
+                            id: this.generate_id(),
                             name: value
                         }]
                 } : block);
@@ -10864,10 +10811,19 @@ var $;
             }
             add_block(name) {
                 this.data([...this.data(), {
-                        id: crypto.randomUUID(),
+                        id: this.generate_id(),
                         name,
                         tasks: []
                     }]);
+            }
+            remove_task(block_id, task_id) {
+                const new_deck = this.data().map(block => block.id === block_id ? {
+                    ...block, tasks: block.tasks.filter(task => task.id !== task_id)
+                } : block);
+                this.data(new_deck);
+            }
+            remove_block(block_id) {
+                this.data(this.data().filter(block => block.id !== block_id));
             }
         }
         __decorate([
@@ -10876,12 +10832,65 @@ var $;
         $$.$bss_task_deck_model = $bss_task_deck_model;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
-//bss/task/deck/deck.model.ts
+//bss/task/deck/model/model.ts
 ;
 "use strict";
 var $;
 (function ($) {
-    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block] {\n\t/* background: lightgray; */\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_block_new_task] {\n\t/* background-color: white; */\n}\n\n[bss_task_deck_task] {\n\t/* background: white; */\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task] + [bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}\n\n");
+    var $$;
+    (function ($$) {
+        class $bss_task_deck extends $.$bss_task_deck {
+            model() {
+                const model = new this.$.$bss_task_deck_model;
+                return model;
+            }
+            block_list() {
+                return [...this.model().data().map(block => this.Block(block.id)) || [], this.Add_block()];
+            }
+            get_block(id) {
+                return this.model().data().find(block => block.id === id);
+            }
+            block_status(id) {
+                return this.get_block(id)?.name ?? 'Имя не задано';
+            }
+            task_list(id) {
+                return this.get_block(id)?.tasks?.map(task => this.Task(`${id}__${task.id}`)) || [];
+            }
+            get_task(id) {
+                const [block_id, task_id] = id.split('__');
+                return this.get_block(block_id)?.tasks?.find(task => task.id === task_id);
+            }
+            task_name(id) {
+                return this.get_task(id)?.name ?? 'Задача не задана';
+            }
+            add_task(id, value) {
+                this.model().add_task(id, value);
+            }
+            add_block(value) {
+                this.model().add_block(value);
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bss_task_deck.prototype, "model", null);
+        $$.$bss_task_deck = $bss_task_deck;
+        class $bss_task_deck_block extends $.$bss_task_deck_block {
+            add_new() {
+                if (this.name()) {
+                    this.add(this.name());
+                    this.name('');
+                }
+            }
+        }
+        $$.$bss_task_deck_block = $bss_task_deck_block;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//bss/task/deck/deck.view.ts
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_task] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task] + [bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}\n\n");
 })($ || ($ = {}));
 //bss/task/deck/-css/deck.view.css.ts
 ;
