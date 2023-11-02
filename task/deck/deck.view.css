@@ -2,7 +2,7 @@
 	border: 2px solid gray;
 	border-radius: 0.5rem;
 	padding: 0.5rem;
-	gap: 0.5rem;
+	/* gap: 0.5rem; */
 }
 
 [bss_task_deck_block_content] {
@@ -14,7 +14,6 @@
 	border-radius: 0.5rem;
 }
 
-[bss_task_deck_task] + [bss_task_deck_task] {
+[bss_task_deck_task]+[bss_task_deck_task] {
 	margin-top: 0.5rem;
 }
-
