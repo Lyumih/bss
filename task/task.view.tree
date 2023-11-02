@@ -1,5 +1,7 @@
 $bss_task $mol_page
-	title \BSS Task
+	title \BSS Задачи
+	attr *
+		mol_theme \$mol_theme_light
 	body /
-		<= Auth $mol_page
+		<= Auth $bss_task_auth
 		<= Deck $mol_page
