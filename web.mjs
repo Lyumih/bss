@@ -9919,38 +9919,6 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    class $bss_task_deck extends $mol_list {
-        rows() {
-            return [
-                this.Column()
-            ];
-        }
-        Status() {
-            const obj = new this.$.$mol_text();
-            obj.text = () => "В ожидании";
-            return obj;
-        }
-        Column() {
-            const obj = new this.$.$mol_list();
-            obj.rows = () => [
-                this.Status()
-            ];
-            return obj;
-        }
-    }
-    __decorate([
-        $mol_mem
-    ], $bss_task_deck.prototype, "Status", null);
-    __decorate([
-        $mol_mem
-    ], $bss_task_deck.prototype, "Column", null);
-    $.$bss_task_deck = $bss_task_deck;
-})($ || ($ = {}));
-//bss/task/deck/-view.tree/deck.view.tree.ts
-;
-"use strict";
-var $;
-(function ($) {
     class $mol_text_list extends $mol_text {
         auto_scroll() {
             return null;
@@ -9996,6 +9964,132 @@ var $;
     $mol_style_attach("mol/text/list/list.view.css", "[mol_text_list] {\r\n\tpadding-left: 1.75rem;\r\n}\r\n\r\n[mol_text_list_item] {\r\n\tcontain: none;\r\n\tdisplay: list-item;\r\n}\r\n\r\n[mol_text_list_item]::before {\r\n\tcontent: attr( mol_text_list_item_index ) \".\";\r\n\twidth: 1.25rem;\r\n\tdisplay: inline-block;\r\n\tposition: absolute;\r\n\tmargin-left: -1.75rem;\r\n\ttext-align: end;\r\n}\r\n\r\n[mol_text_list_type=\"-\"] > [mol_text_list_item]::before,\r\n[mol_text_list_type=\"*\"] > [mol_text_list_item]::before {\r\n\tcontent: \"•\";\r\n}\r\n");
 })($ || ($ = {}));
 //mol/text/list/-css/list.view.css.ts
+;
+"use strict";
+var $;
+(function ($) {
+    class $bss_task_deck extends $mol_list {
+        rows() {
+            return [
+                this.Block_list()
+            ];
+        }
+        block_status(id) {
+            return "";
+        }
+        Status(id) {
+            const obj = new this.$.$mol_text();
+            obj.text = () => this.block_status(id);
+            return obj;
+        }
+        task_name(id) {
+            return "";
+        }
+        Task_name(id) {
+            const obj = new this.$.$mol_text();
+            obj.text = () => this.task_name(id);
+            return obj;
+        }
+        Task(id) {
+            const obj = new this.$.$mol_list();
+            obj.rows = () => [
+                this.Task_name(id)
+            ];
+            return obj;
+        }
+        task_list(id) {
+            return [
+                this.Task("0_1")
+            ];
+        }
+        Task_list(id) {
+            const obj = new this.$.$mol_list();
+            obj.rows = () => this.task_list(id);
+            return obj;
+        }
+        Block(id) {
+            const obj = new this.$.$mol_list();
+            obj.rows = () => [
+                this.Status(id),
+                this.Task_list(id)
+            ];
+            return obj;
+        }
+        block_list() {
+            return [
+                this.Block("0")
+            ];
+        }
+        Block_list() {
+            const obj = new this.$.$mol_row();
+            obj.sub = () => this.block_list();
+            return obj;
+        }
+    }
+    __decorate([
+        $mol_mem_key
+    ], $bss_task_deck.prototype, "Status", null);
+    __decorate([
+        $mol_mem_key
+    ], $bss_task_deck.prototype, "Task_name", null);
+    __decorate([
+        $mol_mem_key
+    ], $bss_task_deck.prototype, "Task", null);
+    __decorate([
+        $mol_mem_key
+    ], $bss_task_deck.prototype, "Task_list", null);
+    __decorate([
+        $mol_mem_key
+    ], $bss_task_deck.prototype, "Block", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck.prototype, "Block_list", null);
+    $.$bss_task_deck = $bss_task_deck;
+})($ || ($ = {}));
+//bss/task/deck/-view.tree/deck.view.tree.ts
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $bss_task_deck extends $.$bss_task_deck {
+            block_data() {
+                return this.$.$bss_task_data();
+            }
+            block_list() {
+                return this.block_data().map(block => this.Block(block.id));
+            }
+            get_block(id) {
+                return this.block_data().find(block => block.id === id);
+            }
+            block_status(id) {
+                return this.get_block(id)?.name ?? 'Имя не задано';
+            }
+            task_list(id) {
+                return this.get_block(id)?.tasks?.map(task => this.Task(`${id}__${task.id}`)) || [];
+            }
+            get_task(id) {
+                const [block_id, task_id] = id.split('__');
+                console.log('block_id', task_id);
+                return this.get_block(block_id)?.tasks?.find(task => task.id === task_id);
+            }
+            task_name(id) {
+                console.log(id);
+                return this.get_task(id)?.name ?? 'Задача не задана';
+            }
+        }
+        $$.$bss_task_deck = $bss_task_deck;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//bss/task/deck/deck.view.ts
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task_list] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tmargin: 0.5rem;\n}\n");
+})($ || ($ = {}));
+//bss/task/deck/-css/deck.view.css.ts
 ;
 "use strict";
 var $;
@@ -10121,12 +10215,48 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    $.$bss_task_data = () => [
+        {
+            id: '1',
+            name: 'В ожидании',
+            tasks: [
+                {
+                    id: '1_1',
+                    name: 'Создать сайт по макету',
+                },
+                {
+                    id: '1_2',
+                    name: 'Разработать дизайн геля для бритья'
+                }
+            ]
+        },
+        {
+            id: '2',
+            name: 'В процессе',
+            tasks: [
+                {
+                    id: '2_1',
+                    name: 'Разместить сайт на сервере',
+                }
+            ]
+        },
+        {
+            id: '3',
+            name: 'Готовые',
+            tasks: []
+        }
+    ];
+})($ || ($ = {}));
+//bss/task/data.ts
+;
+"use strict";
+var $;
+(function ($) {
     var $$;
     (function ($$) {
         class $bss_task extends $.$bss_task {
             body() {
                 const user = this.$.$mol_state_local.value('user');
-                console.log(user);
                 return [user ? this.Deck() : this.Auth()];
             }
             logout(next) {

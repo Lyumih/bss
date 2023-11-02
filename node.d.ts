@@ -3012,14 +3012,6 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    class $bss_task_deck extends $mol_list {
-        rows(): readonly any[];
-        Status(): $$.$mol_text;
-        Column(): $$.$mol_list;
-    }
-}
-
-declare namespace $ {
     class $mol_text_list extends $mol_text {
         auto_scroll(): any;
         attr(): Record<string, any>;
@@ -3036,11 +3028,59 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    class $bss_task_deck extends $mol_list {
+        rows(): readonly any[];
+        block_status(id: any): string;
+        Status(id: any): $$.$mol_text;
+        task_name(id: any): string;
+        Task_name(id: any): $$.$mol_text;
+        Task(id: any): $$.$mol_list;
+        task_list(id: any): readonly any[];
+        Task_list(id: any): $$.$mol_list;
+        Block(id: any): $$.$mol_list;
+        block_list(): readonly any[];
+        Block_list(): $mol_row;
+    }
+}
+
+declare namespace $.$$ {
+    class $bss_task_deck extends $.$bss_task_deck {
+        block_data(): {
+            id: string;
+            name: string;
+            tasks: {
+                id: string;
+                name: string;
+            }[];
+        }[];
+        block_list(): readonly $mol_view[];
+        get_block(id: string): {
+            id: string;
+            name: string;
+            tasks: {
+                id: string;
+                name: string;
+            }[];
+        } | undefined;
+        block_status(id: string): string;
+        task_list(id: string): readonly $mol_view[];
+        get_task(id: string): {
+            id: string;
+            name: string;
+        } | undefined;
+        task_name(id: any): string;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
     class $bss_task_auth extends $mol_list {
         rows(): readonly any[];
         Login(): $$.$bss_task_auth_login;
         Registration(): $bss_task_auth_registration;
-        Deck(): $bss_task_deck;
+        Deck(): $$.$bss_task_deck;
     }
 }
 
@@ -3060,8 +3100,19 @@ declare namespace $ {
         Logout_icon(): $mol_icon_logout;
         Logout(): $mol_button_minor;
         Auth(): $$.$bss_task_auth;
-        Deck(): $bss_task_deck;
+        Deck(): $$.$bss_task_deck;
     }
+}
+
+declare namespace $ {
+    const $bss_task_data: () => {
+        id: string;
+        name: string;
+        tasks: {
+            id: string;
+            name: string;
+        }[];
+    }[];
 }
 
 declare namespace $.$$ {
