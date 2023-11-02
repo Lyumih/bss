@@ -32,7 +32,7 @@ $bss_task_auth_registration $mol_form
 			name \Должность
 			bid <= position_bid \
 			control <= Position_control $mol_select
-				value? <=> position? \
+				value? <=> position? \manager
 				dictionary *
 					manager \Руководитель
 					designer \Дизайнер
@@ -43,4 +43,5 @@ $bss_task_auth_registration $mol_form
 		<= Registration $mol_button_major
 			title \Зарегистрироваться
 		<= Login $mol_link
+			arg * page \
 			title \Войти
