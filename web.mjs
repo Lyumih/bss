@@ -10140,7 +10140,6 @@ var $;
     (function ($$) {
         class $bss_task_deck_model extends $.$mol_object {
             data(next) {
-                console.log(next);
                 return next ? next : [
                     {
                         id: '1',
