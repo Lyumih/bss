@@ -17,7 +17,6 @@ namespace $.$$ {
 
 		@$mol_mem
 		data( next?: $bss_task_deck_model_Deck[] ): $bss_task_deck_model_Deck[] {
-			console.log( next )
 			return next ? next : [
 				{
 					id: '1',
