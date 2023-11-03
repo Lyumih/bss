@@ -3098,17 +3098,6 @@ declare namespace $ {
     }
 }
 
-declare namespace $ {
-    const $bss_task_data: () => {
-        id: string;
-        name: string;
-        tasks: {
-            id: string;
-            name: string;
-        }[];
-    }[];
-}
-
 declare namespace $.$$ {
     class $bss_task extends $.$bss_task {
         body(): readonly any[];

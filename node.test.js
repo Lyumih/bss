@@ -11450,43 +11450,6 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $.$bss_task_data = () => [
-        {
-            id: '1',
-            name: 'В ожидании',
-            tasks: [
-                {
-                    id: '1_1',
-                    name: 'Создать сайт по макету',
-                },
-                {
-                    id: '1_2',
-                    name: 'Разработать дизайн геля для бритья'
-                }
-            ]
-        },
-        {
-            id: '2',
-            name: 'В процессе',
-            tasks: [
-                {
-                    id: '2_1',
-                    name: 'Разместить сайт на сервере',
-                }
-            ]
-        },
-        {
-            id: '3',
-            name: 'Готовые',
-            tasks: []
-        }
-    ];
-})($ || ($ = {}));
-//bss/task/data.ts
-;
-"use strict";
-var $;
-(function ($) {
     var $$;
     (function ($$) {
         class $bss_task extends $.$bss_task {
