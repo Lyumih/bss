@@ -4,7 +4,6 @@ $bss_task_auth_login $mol_form
 			name \E-mail
 			bid <= email_bid \
 			control <= Email_control $mol_string
-				type \email
 				value? <=> email? \
 		<= Password_field $mol_form_field
 			name \Пароль

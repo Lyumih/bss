@@ -3,6 +3,7 @@ $bss_task $mol_page
 	attr *
 		mol_theme \$mol_theme_light
 	tools /
+		<= Email $mol_text text <= email \
 		<= Logout $mol_button_minor
 			click? <= logout? null
 			sub / <= Logout_icon $mol_icon_logout
