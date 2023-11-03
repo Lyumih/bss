@@ -4017,7 +4017,6 @@ var $;
         'Пустые данные'() {
             login.email('');
             login.password('');
-            console.log(login.password(), login.password_bid());
             $mol_assert_equal(login.email_bid(), 'Заполните это поле');
             $mol_assert_equal(login.password_bid(), 'Заполните это поле');
             $mol_assert_not(login.login_verified());
@@ -4077,6 +4076,7 @@ var $;
         name: 'Создать сайт по макету',
     };
     const model = new $$.$bss_task_deck_model;
+    model.data_key = () => 'deck-test';
     model.data([]);
     $mol_test({
         'Пустые карточки'() {

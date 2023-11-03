@@ -3135,6 +3135,16 @@ declare namespace $ {
 declare namespace $.$$ {
     class $bss_task_deck_model extends $.$mol_object {
         data(next?: $bss_task_deck_model_Deck[]): $bss_task_deck_model_Deck[];
+        data_key(): string;
+        data_update(next: $bss_task_deck_model_Deck[]): $bss_task_deck_model_Deck[];
+        data_fetch(): {
+            id: `${string}-${string}-${string}-${string}-${string}`;
+            name: string;
+            tasks: {
+                id: `${string}-${string}-${string}-${string}-${string}`;
+                name: string;
+            }[];
+        }[];
         generate_id(): string;
         add_block(name: string): void;
         remove_block(block_id: string): void;

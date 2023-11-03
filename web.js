@@ -10472,33 +10472,48 @@ var $;
     (function ($$) {
         class $bss_task_deck_model extends $.$mol_object {
             data(next) {
-                return next ? next : [
+                if (next)
+                    return this.data_update(next);
+                const data_local = this.$.$mol_state_local.value(this.data_key());
+                if (data_local)
+                    return data_local;
+                const data_fetched = this.data_fetch();
+                return this.data_update(data_fetched || []);
+            }
+            data_key() {
+                return 'deck';
+            }
+            data_update(next) {
+                return this.$.$mol_state_local.value(this.data_key(), next);
+            }
+            data_fetch() {
+                return [
                     {
-                        id: '1',
+                        id: crypto.randomUUID(),
                         name: 'В ожидании',
                         tasks: [
                             {
-                                id: '1_1',
+                                id: crypto.randomUUID(),
                                 name: 'Создать сайт по макету',
                             },
                             {
-                                id: '1_2',
+                                id: crypto.randomUUID(),
                                 name: 'Разработать дизайн геля для бритья'
                             }
                         ]
                     },
                     {
-                        id: '2',
+                        id: crypto.randomUUID(),
                         name: 'В процессе',
                         tasks: [
                             {
-                                id: '2_1',
+                                id: crypto.randomUUID(),
                                 name: 'Разместить сайт на сервере',
                             }
                         ]
                     },
                     {
-                        id: '3',
+                        id: crypto.randomUUID(),
                         name: 'Готовые',
                         tasks: []
                     }
@@ -10559,6 +10574,9 @@ var $;
         __decorate([
             $mol_mem
         ], $bss_task_deck_model.prototype, "data", null);
+        __decorate([
+            $mol_mem
+        ], $bss_task_deck_model.prototype, "data_fetch", null);
         $$.$bss_task_deck_model = $bss_task_deck_model;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
@@ -10571,8 +10589,7 @@ var $;
     (function ($$) {
         class $bss_task_deck extends $.$bss_task_deck {
             model() {
-                const model = new this.$.$bss_task_deck_model;
-                return model;
+                return new this.$.$bss_task_deck_model;
             }
             block_list() {
                 return [...this.model().data().map(block => this.Block(block.id)) || [], this.New_block()];
@@ -10581,7 +10598,7 @@ var $;
                 return this.model().data().find(block => block.id === id);
             }
             block_status(id) {
-                return '### ' + this.get_block(id)?.name ?? 'Имя не задано';
+                return `**${this.get_block(id)?.name}**` ?? 'Имя не задано';
             }
             add_block() {
                 if (this.new_block) {
