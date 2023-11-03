@@ -32,6 +32,8 @@ $bss_task_auth_registration $mol_form
 			name \Должность
 			bid <= position_bid \
 			control <= Position_control $mol_select
+				Filter null
+				Trigger_icon null
 				value? <=> position? \manager
 				dictionary *
 					manager \Руководитель

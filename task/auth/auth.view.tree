@@ -2,4 +2,3 @@ $bss_task_auth $mol_list
 	rows /
 		<= Login $bss_task_auth_login
 		<= Registration $bss_task_auth_registration
-		<= Deck $bss_task_deck

@@ -22,6 +22,7 @@ namespace $.$$ {
 		add_block() {
 			if( this.new_block ) {
 				this.model().add_block( this.new_block() )
+				this.new_block( '' )
 			}
 		}
 
