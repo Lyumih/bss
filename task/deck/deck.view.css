@@ -17,3 +17,8 @@
 [bss_task_deck_task]+[bss_task_deck_task] {
 	margin-top: 0.5rem;
 }
+
+[bss_task_deck_block_status],
+[bss_task_deck_task_content] {
+	flex: 1;
+}
