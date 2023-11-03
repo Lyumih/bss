@@ -9,7 +9,6 @@ $bss_task_deck $mol_row
 					blocks <= blocks *
 					select? <=> selected*? \
 					task_name? <=> task_name*? \
-					edit? <=> edit_task*? null
 					remove? <=> remove_task*? null
 		<= New_block $mol_string
 			hint \Добавить карточку
