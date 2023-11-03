@@ -431,6 +431,8 @@ $bss_task_auth_registration $mol_form
 			name \Должность
 			bid <= position_bid \
 			control <= Position_control $mol_select
+				Filter null
+				Trigger_icon null
 				value? <=> position? \manager
 				dictionary *
 					manager \Руководитель
@@ -444,6 +446,11 @@ $bss_task_auth_registration $mol_form
 		<= Login $mol_link
 			arg * page \
 			title \Войти
+
+$bss_task_auth $mol_list
+	rows /
+		<= Login $bss_task_auth_login
+		<= Registration $bss_task_auth_registration
 
 $mol_stack $mol_view
 
@@ -775,8 +782,6 @@ $mol_icon_delete $mol_icon path \M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19C6,20.1 
 
 $mol_icon_edit $mol_icon path \M5,3C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19H5V5H12V3H5M17.78,4C17.61,4 17.43,4.07 17.3,4.2L16.08,5.41L18.58,7.91L19.8,6.7C20.06,6.44 20.06,6 19.8,5.75L18.25,4.2C18.12,4.07 17.95,4 17.78,4M15.37,6.12L8,13.5V16H10.5L17.87,8.62L15.37,6.12Z
 
-$mol_check_icon $mol_check
-
 $mol_text_list $mol_text
 	auto_scroll null
 	attr *
@@ -799,11 +804,12 @@ $bss_task_deck $mol_row
 			remove? <=> remove_block*? null
 			tasks <= task_list* /
 				<= Task*0__1 $bss_task_deck_task
+					blocks <= blocks /
 					task_name <= task_name* \
 					edit? <=> edit_task*? null
 					remove? <=> remove_task*? null
 		<= New_block $mol_string
-			hint \Добавить блок
+			hint \Добавить карточку
 			value? <=> new_block? \
 			submit? <=> add_block? null
 
@@ -824,26 +830,21 @@ $bss_task_deck_block $mol_list
 				submit? <=> add_new? null
 
 $bss_task_deck_task $mol_row
+	blocks /
 	edit? null
 	sub /
-		<= Content $mol_view sub <= content /
-			<= Task $mol_text text <= task_name \
-			<= Task_edit $mol_string
-				value? <=> edit_task_name? \
-				submit? <=> edit_task? null
-		<= Edit $mol_check_icon
-			Icon <= Edit_icon $mol_icon_edit
-			checked? <=> edit_checked? false
+		<= Task $mol_text text <= task_name \
+		<= Edit $mol_pick
+			trigger_content / <= Edit_icon $mol_icon_edit
+			bubble_content /
+				<= Block_select $mol_list rows <= block_list /
+					<= Block*0 $mol_button_minor
+						title <= block_name* \
+						click? <=> edit_task*? null
 		<= Remove $mol_button_minor
 			hint \Удалить задачу
 			sub / <= Remove_icon $mol_icon_delete
 			click? <=> remove? null
-
-$bss_task_auth $mol_list
-	rows /
-		<= Login $bss_task_auth_login
-		<= Registration $bss_task_auth_registration
-		<= Deck $bss_task_deck
 
 $bss_task $mol_page
 	title \BSS Задачи

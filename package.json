@@ -214,7 +214,6 @@
     "$mol_frame",
     "$mol_icon_delete",
     "$mol_icon_edit",
-    "$mol_check_icon",
     "$bss_task_deck_model"
   ],
   "dependencies": {

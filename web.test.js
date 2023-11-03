@@ -3986,46 +3986,60 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    let block = {
-        id: 'block54a-076c-470e-b9ae-4b1dcaf8f02b',
+    const blocks = [];
+    const block = {
+        id: 'block14a-076c-470e-b9ae-4b1dcaf8f02b',
         name: 'В ожидании',
+        tasks: [],
+    };
+    const block_second = {
+        id: 'block2sec-c316-4316-a034-a4c4ab494075',
+        name: 'В процессе',
         tasks: [],
     };
     const task = {
         id: 'taskf511-c316-4316-a034-a4c4ab494075',
         name: 'Создать сайт по макету',
     };
-    const new_task_name = 'Разработать дизайн геля для бритья';
     const model = new $$.$bss_task_deck_model;
     model.data([]);
     $mol_test({
         'empty'() {
-            $mol_assert_like([], []);
+            $mol_assert_like([], blocks);
         },
-        'add deck'() {
+        'add block'() {
             model.generate_id = () => block.id;
             model.add_block(block.name);
-            $mol_assert_like(model.data(), [block]);
+            blocks.push(block);
+            $mol_assert_like(model.data(), blocks);
         },
         'add task'() {
             model.generate_id = () => task.id;
             model.add_task(block.id, task.name);
-            block.tasks.push(task);
-            $mol_assert_like(model.data(), [block]);
+            blocks[0].tasks.push(task);
+            $mol_assert_like(model.data(), blocks);
+        },
+        'add second block'() {
+            model.generate_id = () => block_second.id;
+            model.add_block(block_second.name);
+            blocks.push(block_second);
+            $mol_assert_like(model.data(), blocks);
         },
         'edit task'() {
-            model.edit_task(block.id, task.id, new_task_name);
-            block.tasks[0].name = new_task_name;
-            $mol_assert_like(model.data(), [block]);
+            model.edit_task(block.id, task.id, block_second.id);
+            blocks[0].tasks = [];
+            blocks[1].tasks.push(task);
+            $mol_assert_like(model.data(), blocks);
         },
         'remove task'() {
             model.remove_task(block.id, task.id);
-            block.tasks = [];
-            $mol_assert_like(model.data(), [block]);
+            blocks[1].tasks = [];
+            $mol_assert_like(model.data(), blocks);
         },
         'remove deck'() {
             model.remove_block(block.id);
-            $mol_assert_like(model.data(), []);
+            blocks.splice(0, 1);
+            $mol_assert_like(model.data(), blocks);
         }
     });
 })($ || ($ = {}));

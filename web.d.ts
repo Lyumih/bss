@@ -2132,6 +2132,23 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    class $bss_task_auth extends $mol_list {
+        rows(): readonly any[];
+        Login(): $$.$bss_task_auth_login;
+        Registration(): $bss_task_auth_registration;
+    }
+}
+
+declare namespace $.$$ {
+    class $bss_task_auth extends $.$bss_task_auth {
+        rows(): readonly any[];
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
     class $mol_stack extends $mol_view {
     }
 }
@@ -2891,14 +2908,6 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    class $mol_check_icon extends $mol_check {
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
     class $mol_text_list extends $mol_text {
         auto_scroll(): any;
         attr(): Record<string, any>;
@@ -2920,6 +2929,7 @@ declare namespace $ {
         block_status(id: any): string;
         add_task(id: any, next?: any): any;
         remove_block(id: any, next?: any): any;
+        blocks(): readonly any[];
         task_name(id: any): string;
         edit_task(id: any, next?: any): any;
         remove_task(id: any, next?: any): any;
@@ -2949,18 +2959,18 @@ declare namespace $ {
         Content(): $$.$mol_list;
     }
     class $bss_task_deck_task extends $mol_row {
+        blocks(): readonly any[];
         edit(next?: any): any;
         sub(): readonly any[];
         task_name(): string;
         Task(): $$.$mol_text;
-        edit_task_name(next?: any): string;
-        edit_task(next?: any): any;
-        Task_edit(): $$.$mol_string;
-        content(): readonly any[];
-        Content(): $mol_view;
         Edit_icon(): $mol_icon_edit;
-        edit_checked(next?: any): boolean;
-        Edit(): $mol_check_icon;
+        block_name(id: any): string;
+        edit_task(id: any, next?: any): any;
+        Block(id: any): $mol_button_minor;
+        block_list(): readonly any[];
+        Block_select(): $$.$mol_list;
+        Edit(): $$.$mol_pick;
         Remove_icon(): $mol_icon_delete;
         remove(next?: any): any;
         Remove(): $mol_button_minor;
@@ -2986,7 +2996,7 @@ declare namespace $.$$ {
         remove_block(block_id: string): void;
         add_task(id: string, value: string): void;
         remove_task(block_id: string, task_id: string): void;
-        edit_task(block_id: string, task_id: string, value: string): void;
+        edit_task(block_id: string, task_id: string, target_block_id: string): void;
     }
 }
 
@@ -3003,33 +3013,23 @@ declare namespace $.$$ {
         task_name(id: string): string;
         add_task(id: string, value: string): void;
         remove_task(id: string): void;
+        blocks(): {
+            id: string;
+            name: string;
+        }[];
         edit_task(id: string, next: string): void;
     }
     class $bss_task_deck_block extends $.$bss_task_deck_block {
         add_new(): void;
     }
     class $bss_task_deck_task extends $.$bss_task_deck_task {
-        edit_task(): void;
-        content(): readonly any[];
+        block_list(): readonly $mol_view[];
+        block_name(id: string): any;
+        edit_task(id: string): void;
     }
 }
 
 declare namespace $ {
-}
-
-declare namespace $ {
-    class $bss_task_auth extends $mol_list {
-        rows(): readonly any[];
-        Login(): $$.$bss_task_auth_login;
-        Registration(): $bss_task_auth_registration;
-        Deck(): $$.$bss_task_deck;
-    }
-}
-
-declare namespace $.$$ {
-    class $bss_task_auth extends $.$bss_task_auth {
-        rows(): readonly any[];
-    }
 }
 
 declare namespace $ {

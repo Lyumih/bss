@@ -7236,6 +7236,8 @@ var $;
         }
         Position_control() {
             const obj = new this.$.$mol_select();
+            obj.Filter = () => null;
+            obj.Trigger_icon = () => null;
             obj.value = (next) => this.position(next);
             obj.dictionary = () => ({
                 manager: "Руководитель",
@@ -7330,6 +7332,58 @@ var $;
     $.$bss_task_auth_registration = $bss_task_auth_registration;
 })($ || ($ = {}));
 //bss/task/auth/registration/-view.tree/registration.view.tree.ts
+;
+"use strict";
+var $;
+(function ($) {
+    class $bss_task_auth extends $mol_list {
+        rows() {
+            return [
+                this.Login(),
+                this.Registration()
+            ];
+        }
+        Login() {
+            const obj = new this.$.$bss_task_auth_login();
+            return obj;
+        }
+        Registration() {
+            const obj = new this.$.$bss_task_auth_registration();
+            return obj;
+        }
+    }
+    __decorate([
+        $mol_mem
+    ], $bss_task_auth.prototype, "Login", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_auth.prototype, "Registration", null);
+    $.$bss_task_auth = $bss_task_auth;
+})($ || ($ = {}));
+//bss/task/auth/-view.tree/auth.view.tree.ts
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $bss_task_auth extends $.$bss_task_auth {
+            rows() {
+                const page = $mol_state_arg.value('page');
+                return [page === 'registration' ? this.Registration() : this.Login()];
+            }
+        }
+        $$.$bss_task_auth = $bss_task_auth;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//bss/task/auth/auth.view.ts
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("bss/task/auth/auth.view.css", "[bss_task_auth] {\n\twidth: 20rem;\n\tmargin: 5rem auto;\n}");
+})($ || ($ = {}));
+//bss/task/auth/-css/auth.view.css.ts
 ;
 "use strict";
 var $;
@@ -9941,22 +9995,6 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    class $mol_check_icon extends $mol_check {
-    }
-    $.$mol_check_icon = $mol_check_icon;
-})($ || ($ = {}));
-//mol/check/icon/-view.tree/icon.view.tree.ts
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/check/icon/icon.view.css", "[mol_check_icon]:where([mol_check_checked]) {\n\tcolor: var(--mol_theme_current);\n}\n");
-})($ || ($ = {}));
-//mol/check/icon/-css/icon.view.css.ts
-;
-"use strict";
-var $;
-(function ($) {
     class $mol_text_list extends $mol_text {
         auto_scroll() {
             return null;
@@ -10023,6 +10061,9 @@ var $;
                 return next;
             return null;
         }
+        blocks() {
+            return [];
+        }
         task_name(id) {
             return "";
         }
@@ -10038,6 +10079,7 @@ var $;
         }
         Task(id) {
             const obj = new this.$.$bss_task_deck_task();
+            obj.blocks = () => this.blocks();
             obj.task_name = () => this.task_name(id);
             obj.edit = (next) => this.edit_task(id, next);
             obj.remove = (next) => this.remove_task(id, next);
@@ -10068,7 +10110,7 @@ var $;
         }
         New_block() {
             const obj = new this.$.$mol_string();
-            obj.hint = () => "Добавить блок";
+            obj.hint = () => "Добавить карточку";
             obj.value = (next) => this.new_block(next);
             obj.submit = (next) => this.add_block(next);
             return obj;
@@ -10226,6 +10268,9 @@ var $;
     ], $bss_task_deck_block.prototype, "Content", null);
     $.$bss_task_deck_block = $bss_task_deck_block;
     class $bss_task_deck_task extends $mol_row {
+        blocks() {
+            return [];
+        }
         edit(next) {
             if (next !== undefined)
                 return next;
@@ -10233,7 +10278,7 @@ var $;
         }
         sub() {
             return [
-                this.Content(),
+                this.Task(),
                 this.Edit(),
                 this.Remove()
             ];
@@ -10246,46 +10291,42 @@ var $;
             obj.text = () => this.task_name();
             return obj;
         }
-        edit_task_name(next) {
-            if (next !== undefined)
-                return next;
-            return "";
-        }
-        edit_task(next) {
-            if (next !== undefined)
-                return next;
-            return null;
-        }
-        Task_edit() {
-            const obj = new this.$.$mol_string();
-            obj.value = (next) => this.edit_task_name(next);
-            obj.submit = (next) => this.edit_task(next);
-            return obj;
-        }
-        content() {
-            return [
-                this.Task(),
-                this.Task_edit()
-            ];
-        }
-        Content() {
-            const obj = new this.$.$mol_view();
-            obj.sub = () => this.content();
-            return obj;
-        }
         Edit_icon() {
             const obj = new this.$.$mol_icon_edit();
             return obj;
         }
-        edit_checked(next) {
+        block_name(id) {
+            return "";
+        }
+        edit_task(id, next) {
             if (next !== undefined)
                 return next;
-            return false;
+            return null;
+        }
+        Block(id) {
+            const obj = new this.$.$mol_button_minor();
+            obj.title = () => this.block_name(id);
+            obj.click = (next) => this.edit_task(id, next);
+            return obj;
+        }
+        block_list() {
+            return [
+                this.Block("0")
+            ];
+        }
+        Block_select() {
+            const obj = new this.$.$mol_list();
+            obj.rows = () => this.block_list();
+            return obj;
         }
         Edit() {
-            const obj = new this.$.$mol_check_icon();
-            obj.Icon = () => this.Edit_icon();
-            obj.checked = (next) => this.edit_checked(next);
+            const obj = new this.$.$mol_pick();
+            obj.trigger_content = () => [
+                this.Edit_icon()
+            ];
+            obj.bubble_content = () => [
+                this.Block_select()
+            ];
             return obj;
         }
         Remove_icon() {
@@ -10315,22 +10356,16 @@ var $;
     ], $bss_task_deck_task.prototype, "Task", null);
     __decorate([
         $mol_mem
-    ], $bss_task_deck_task.prototype, "edit_task_name", null);
-    __decorate([
-        $mol_mem
-    ], $bss_task_deck_task.prototype, "edit_task", null);
-    __decorate([
-        $mol_mem
-    ], $bss_task_deck_task.prototype, "Task_edit", null);
-    __decorate([
-        $mol_mem
-    ], $bss_task_deck_task.prototype, "Content", null);
-    __decorate([
-        $mol_mem
     ], $bss_task_deck_task.prototype, "Edit_icon", null);
     __decorate([
+        $mol_mem_key
+    ], $bss_task_deck_task.prototype, "edit_task", null);
+    __decorate([
+        $mol_mem_key
+    ], $bss_task_deck_task.prototype, "Block", null);
+    __decorate([
         $mol_mem
-    ], $bss_task_deck_task.prototype, "edit_checked", null);
+    ], $bss_task_deck_task.prototype, "Block_select", null);
     __decorate([
         $mol_mem
     ], $bss_task_deck_task.prototype, "Edit", null);
@@ -10414,13 +10449,28 @@ var $;
                 } : block);
                 this.data(new_deck);
             }
-            edit_task(block_id, task_id, value) {
-                const new_deck = this.data().map(block => block.id === block_id ? {
-                    ...block, tasks: block.tasks.map(task => task.id === task_id ? {
-                        ...task, name: value
-                    } : task)
-                } : block);
-                this.data(new_deck);
+            edit_task(block_id, task_id, target_block_id) {
+                if (block_id === target_block_id)
+                    return;
+                const task = this.data().find(block => block.id === block_id)?.tasks.find(task => task.id === task_id);
+                if (task) {
+                    const new_deck = this.data().map(block => {
+                        if (block.id === block_id) {
+                            return {
+                                ...block, tasks: block.tasks.filter(task => task.id !== task_id)
+                            };
+                        }
+                        else if (block.id === target_block_id) {
+                            return {
+                                ...block, tasks: [...block.tasks, task]
+                            };
+                        }
+                        else {
+                            return block;
+                        }
+                    });
+                    this.data(new_deck);
+                }
             }
         }
         __decorate([
@@ -10451,8 +10501,10 @@ var $;
                 return this.get_block(id)?.name ?? 'Имя не задано';
             }
             add_block() {
-                if (this.new_block)
+                if (this.new_block) {
                     this.model().add_block(this.new_block());
+                    this.new_block('');
+                }
             }
             remove_block(next) {
                 this.model().remove_block(next);
@@ -10474,6 +10526,9 @@ var $;
                 const [block_id, task_id] = id.split('__');
                 this.model().remove_task(block_id, task_id);
             }
+            blocks() {
+                return this.model().data().map(({ id, name }) => ({ id, name }));
+            }
             edit_task(id, next) {
                 const [block_id, task_id] = id.split('__');
                 this.model().edit_task(block_id, task_id, next);
@@ -10493,15 +10548,14 @@ var $;
         }
         $$.$bss_task_deck_block = $bss_task_deck_block;
         class $bss_task_deck_task extends $.$bss_task_deck_task {
-            edit_task() {
-                if (this.edit_task_name()) {
-                    this.edit(this.edit_task_name());
-                    this.edit_task_name('');
-                    this.edit_checked(false);
-                }
+            block_list() {
+                return this.blocks().map(block => this.Block(block.id));
             }
-            content() {
-                return [this.edit_checked() ? this.Task_edit() : this.Task()];
+            block_name(id) {
+                return this.blocks().find(block => block.id === id)?.name;
+            }
+            edit_task(id) {
+                this.edit(id);
             }
         }
         $$.$bss_task_deck_task = $bss_task_deck_task;
@@ -10512,62 +10566,9 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\t/* gap: 0.5rem; */\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_task] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task]+[bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}\n\n[bss_task_deck_block_status],\n[bss_task_deck_task_content] {\n\tflex: 1;\n}");
+    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block],\n[bss_task_deck_new_block] {\n\twidth: 25rem;\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\t/* gap: 0.5rem; */\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_task] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task]+[bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}\n\n[bss_task_deck_block_status],\n[bss_task_deck_task_task] {\n\tflex: 1;\n}\n\n[bss_task_deck_new_block] {\n\tmax-width: 12rem;\n}");
 })($ || ($ = {}));
 //bss/task/deck/-css/deck.view.css.ts
-;
-"use strict";
-var $;
-(function ($) {
-    class $bss_task_auth extends $mol_list {
-        rows() {
-            return [
-                this.Login(),
-                this.Registration(),
-                this.Deck()
-            ];
-        }
-        Login() {
-            const obj = new this.$.$bss_task_auth_login();
-            return obj;
-        }
-        Registration() {
-            const obj = new this.$.$bss_task_auth_registration();
-            return obj;
-        }
-        Deck() {
-            const obj = new this.$.$bss_task_deck();
-            return obj;
-        }
-    }
-    __decorate([
-        $mol_mem
-    ], $bss_task_auth.prototype, "Login", null);
-    __decorate([
-        $mol_mem
-    ], $bss_task_auth.prototype, "Registration", null);
-    __decorate([
-        $mol_mem
-    ], $bss_task_auth.prototype, "Deck", null);
-    $.$bss_task_auth = $bss_task_auth;
-})($ || ($ = {}));
-//bss/task/auth/-view.tree/auth.view.tree.ts
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        class $bss_task_auth extends $.$bss_task_auth {
-            rows() {
-                const page = $mol_state_arg.value('page');
-                return [page === 'registration' ? this.Registration() : this.Login()];
-            }
-        }
-        $$.$bss_task_auth = $bss_task_auth;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-//bss/task/auth/auth.view.ts
 ;
 "use strict";
 var $;
