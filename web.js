@@ -10498,7 +10498,7 @@ var $;
                 return this.model().data().find(block => block.id === id);
             }
             block_status(id) {
-                return this.get_block(id)?.name ?? 'Имя не задано';
+                return '### ' + this.get_block(id)?.name ?? 'Имя не задано';
             }
             add_block() {
                 if (this.new_block) {
@@ -10566,7 +10566,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block],\n[bss_task_deck_new_block] {\n\twidth: 25rem;\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\t/* gap: 0.5rem; */\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_task] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task]+[bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}\n\n[bss_task_deck_block_status],\n[bss_task_deck_task_task] {\n\tflex: 1;\n}\n\n[bss_task_deck_new_block] {\n\tmax-width: 12rem;\n}");
+    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck] {\n\tflex-wrap: nowrap;\n}\n\n[bss_task_deck_block],\n[bss_task_deck_new_block] {\n\tbackground: white;\n\twidth: 25rem;\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\t/* gap: 0.5rem; */\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_task] {\n\tbackground: lavenderblush;\n\tborder: 1px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task]+[bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}\n\n[bss_task_deck_block_status],\n[bss_task_deck_task_task] {\n\tflex: 1;\n}\n\n[bss_task_deck_new_block] {\n\tmin-width: 12rem !important;\n\twidth: 12rem;\n\tmax-width: 12rem;\n}");
 })($ || ($ = {}));
 //bss/task/deck/-css/deck.view.css.ts
 ;
@@ -10697,5 +10697,12 @@ var $;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
 //bss/task/task.view.ts
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("bss/task/task.view.css", "[bss_task_head] {\n\tbackground: lavender;\n}\n\n[bss_task_body] {\n\tbackground: aliceblue;\n}");
+})($ || ($ = {}));
+//bss/task/-css/task.view.css.ts
 
 //# sourceMappingURL=web.js.map
