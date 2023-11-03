@@ -11136,7 +11136,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\t/* gap: 0.5rem; */\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_task] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task]+[bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}");
+    $mol_style_attach("bss/task/deck/deck.view.css", "[bss_task_deck_block] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n\tpadding: 0.5rem;\n\t/* gap: 0.5rem; */\n}\n\n[bss_task_deck_block_content] {\n\tgap: 0.5rem;\n}\n\n[bss_task_deck_task] {\n\tborder: 2px solid gray;\n\tborder-radius: 0.5rem;\n}\n\n[bss_task_deck_task]+[bss_task_deck_task] {\n\tmargin-top: 0.5rem;\n}\n\n[bss_task_deck_block_status],\n[bss_task_deck_task_content] {\n\tflex: 1;\n}");
 })($ || ($ = {}));
 //bss/task/deck/-css/deck.view.css.ts
 ;
