@@ -17,33 +17,50 @@ namespace $.$$ {
 
 		@$mol_mem
 		data( next?: $bss_task_deck_model_Deck[] ): $bss_task_deck_model_Deck[] {
-			return next ? next : [
+			if( next ) return this.data_update( next )
+			const data_local = this.$.$mol_state_local.value<$bss_task_deck_model_Deck[]>( this.data_key() )
+			if( data_local ) return data_local
+			const data_fetched = this.data_fetch()
+			return this.data_update( data_fetched || [] )
+		}
+
+		data_key(): string {
+			return 'deck'
+		}
+
+		data_update( next: $bss_task_deck_model_Deck[] ) {
+			return this.$.$mol_state_local.value( this.data_key(), next ) as $bss_task_deck_model_Deck[]
+		}
+
+		@$mol_mem
+		data_fetch() {
+			return [
 				{
-					id: '1',
+					id: crypto.randomUUID(),
 					name: 'В ожидании',
 					tasks: [
 						{
-							id: '1_1',
+							id: crypto.randomUUID(),
 							name: 'Создать сайт по макету',
 						},
 						{
-							id: '1_2',
+							id: crypto.randomUUID(),
 							name: 'Разработать дизайн геля для бритья'
 						}
 					]
 				},
 				{
-					id: '2',
+					id: crypto.randomUUID(),
 					name: 'В процессе',
 					tasks: [
 						{
-							id: '2_1',
+							id: crypto.randomUUID(),
 							name: 'Разместить сайт на сервере',
 						}
 					]
 				},
 				{
-					id: '3',
+					id: crypto.randomUUID(),
 					name: 'Готовые',
 					tasks: []
 				}

@@ -3,8 +3,7 @@ namespace $.$$ {
 
 		@$mol_mem
 		model() {
-			const model = new this.$.$bss_task_deck_model
-			return model
+			return new this.$.$bss_task_deck_model
 		}
 
 		block_list(): readonly $mol_view[] {
@@ -16,7 +15,7 @@ namespace $.$$ {
 		}
 
 		block_status( id: string ): string {
-			return '### ' + this.get_block( id )?.name ?? 'Имя не задано'
+			return `**${ this.get_block( id )?.name }**` ?? 'Имя не задано'
 		}
 
 		add_block() {

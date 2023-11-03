@@ -20,6 +20,7 @@ namespace $ {
 	}
 
 	const model = new $$.$bss_task_deck_model
+	model.data_key = () => 'deck-test'
 	model.data( [] )
 
 	$mol_test( {
