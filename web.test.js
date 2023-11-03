@@ -3995,6 +3995,7 @@ var $;
         id: 'taskf511-c316-4316-a034-a4c4ab494075',
         name: 'Создать сайт по макету',
     };
+    const new_task_name = 'Разработать дизайн геля для бритья';
     const model = new $$.$bss_task_deck_model;
     model.data([]);
     $mol_test({
@@ -4010,6 +4011,11 @@ var $;
             model.generate_id = () => task.id;
             model.add_task(block.id, task.name);
             block.tasks.push(task);
+            $mol_assert_like(model.data(), [block]);
+        },
+        'edit task'() {
+            model.edit_task(block.id, task.id, new_task_name);
+            block.tasks[0].name = new_task_name;
             $mol_assert_like(model.data(), [block]);
         },
         'remove task'() {

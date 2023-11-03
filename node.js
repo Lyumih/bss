@@ -10553,6 +10553,34 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    class $mol_icon_edit extends $mol_icon {
+        path() {
+            return "M5,3C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19H5V5H12V3H5M17.78,4C17.61,4 17.43,4.07 17.3,4.2L16.08,5.41L18.58,7.91L19.8,6.7C20.06,6.44 20.06,6 19.8,5.75L18.25,4.2C18.12,4.07 17.95,4 17.78,4M15.37,6.12L8,13.5V16H10.5L17.87,8.62L15.37,6.12Z";
+        }
+    }
+    $.$mol_icon_edit = $mol_icon_edit;
+})($ || ($ = {}));
+//mol/icon/edit/-view.tree/edit.view.tree.ts
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_check_icon extends $mol_check {
+    }
+    $.$mol_check_icon = $mol_check_icon;
+})($ || ($ = {}));
+//mol/check/icon/-view.tree/icon.view.tree.ts
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/check/icon/icon.view.css", "[mol_check_icon]:where([mol_check_checked]) {\n\tcolor: var(--mol_theme_current);\n}\n");
+})($ || ($ = {}));
+//mol/check/icon/-css/icon.view.css.ts
+;
+"use strict";
+var $;
+(function ($) {
     class $mol_text_list extends $mol_text {
         auto_scroll() {
             return null;
@@ -10604,10 +10632,7 @@ var $;
 (function ($) {
     class $bss_task_deck extends $mol_row {
         sub() {
-            return [
-                this.Blocks(),
-                this.Actions()
-            ];
+            return this.block_list();
         }
         block_status(id) {
             return "";
@@ -10625,6 +10650,11 @@ var $;
         task_name(id) {
             return "";
         }
+        edit_task(id, next) {
+            if (next !== undefined)
+                return next;
+            return null;
+        }
         remove_task(id, next) {
             if (next !== undefined)
                 return next;
@@ -10633,7 +10663,8 @@ var $;
         Task(id) {
             const obj = new this.$.$bss_task_deck_task();
             obj.task_name = () => this.task_name(id);
-            obj.remove = () => this.remove_task(id);
+            obj.edit = (next) => this.edit_task(id, next);
+            obj.remove = (next) => this.remove_task(id, next);
             return obj;
         }
         task_list(id) {
@@ -10647,16 +10678,6 @@ var $;
             obj.add = (next) => this.add_task(id, next);
             obj.remove = (next) => this.remove_block(id, next);
             obj.tasks = () => this.task_list(id);
-            return obj;
-        }
-        block_list() {
-            return [
-                this.Block("0")
-            ];
-        }
-        Blocks() {
-            const obj = new this.$.$mol_row();
-            obj.sub = () => this.block_list();
             return obj;
         }
         new_block(next) {
@@ -10676,12 +10697,11 @@ var $;
             obj.submit = (next) => this.add_block(next);
             return obj;
         }
-        Actions() {
-            const obj = new this.$.$mol_row();
-            obj.sub = () => [
+        block_list() {
+            return [
+                this.Block("0"),
                 this.New_block()
             ];
-            return obj;
         }
     }
     __decorate([
@@ -10690,6 +10710,9 @@ var $;
     __decorate([
         $mol_mem_key
     ], $bss_task_deck.prototype, "remove_block", null);
+    __decorate([
+        $mol_mem_key
+    ], $bss_task_deck.prototype, "edit_task", null);
     __decorate([
         $mol_mem_key
     ], $bss_task_deck.prototype, "remove_task", null);
@@ -10701,9 +10724,6 @@ var $;
     ], $bss_task_deck.prototype, "Block", null);
     __decorate([
         $mol_mem
-    ], $bss_task_deck.prototype, "Blocks", null);
-    __decorate([
-        $mol_mem
     ], $bss_task_deck.prototype, "new_block", null);
     __decorate([
         $mol_mem
@@ -10711,9 +10731,6 @@ var $;
     __decorate([
         $mol_mem
     ], $bss_task_deck.prototype, "New_block", null);
-    __decorate([
-        $mol_mem
-    ], $bss_task_deck.prototype, "Actions", null);
     $.$bss_task_deck = $bss_task_deck;
     class $bss_task_deck_block extends $mol_list {
         add(next) {
@@ -10833,9 +10850,15 @@ var $;
     ], $bss_task_deck_block.prototype, "Content", null);
     $.$bss_task_deck_block = $bss_task_deck_block;
     class $bss_task_deck_task extends $mol_row {
+        edit(next) {
+            if (next !== undefined)
+                return next;
+            return null;
+        }
         sub() {
             return [
-                this.Task(),
+                this.Content(),
+                this.Edit(),
                 this.Remove()
             ];
         }
@@ -10845,6 +10868,48 @@ var $;
         Task() {
             const obj = new this.$.$mol_text();
             obj.text = () => this.task_name();
+            return obj;
+        }
+        edit_task_name(next) {
+            if (next !== undefined)
+                return next;
+            return "";
+        }
+        edit_task(next) {
+            if (next !== undefined)
+                return next;
+            return null;
+        }
+        Task_edit() {
+            const obj = new this.$.$mol_string();
+            obj.value = (next) => this.edit_task_name(next);
+            obj.submit = (next) => this.edit_task(next);
+            return obj;
+        }
+        content() {
+            return [
+                this.Task(),
+                this.Task_edit()
+            ];
+        }
+        Content() {
+            const obj = new this.$.$mol_view();
+            obj.sub = () => this.content();
+            return obj;
+        }
+        Edit_icon() {
+            const obj = new this.$.$mol_icon_edit();
+            return obj;
+        }
+        edit_checked(next) {
+            if (next !== undefined)
+                return next;
+            return false;
+        }
+        Edit() {
+            const obj = new this.$.$mol_check_icon();
+            obj.Icon = () => this.Edit_icon();
+            obj.checked = (next) => this.edit_checked(next);
             return obj;
         }
         Remove_icon() {
@@ -10868,7 +10933,31 @@ var $;
     }
     __decorate([
         $mol_mem
+    ], $bss_task_deck_task.prototype, "edit", null);
+    __decorate([
+        $mol_mem
     ], $bss_task_deck_task.prototype, "Task", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_task.prototype, "edit_task_name", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_task.prototype, "edit_task", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_task.prototype, "Task_edit", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_task.prototype, "Content", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_task.prototype, "Edit_icon", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_task.prototype, "edit_checked", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_deck_task.prototype, "Edit", null);
     __decorate([
         $mol_mem
     ], $bss_task_deck_task.prototype, "Remove_icon", null);
@@ -10924,6 +11013,16 @@ var $;
             generate_id() {
                 return crypto.randomUUID();
             }
+            add_block(name) {
+                this.data([...this.data(), {
+                        id: this.generate_id(),
+                        name,
+                        tasks: []
+                    }]);
+            }
+            remove_block(block_id) {
+                this.data(this.data().filter(block => block.id !== block_id));
+            }
             add_task(id, value) {
                 const new_deck = this.data().map(block => block.id === id ? {
                     ...block, tasks: [...block.tasks, {
@@ -10933,21 +11032,19 @@ var $;
                 } : block);
                 this.data(new_deck);
             }
-            add_block(name) {
-                this.data([...this.data(), {
-                        id: this.generate_id(),
-                        name,
-                        tasks: []
-                    }]);
-            }
             remove_task(block_id, task_id) {
                 const new_deck = this.data().map(block => block.id === block_id ? {
                     ...block, tasks: block.tasks.filter(task => task.id !== task_id)
                 } : block);
                 this.data(new_deck);
             }
-            remove_block(block_id) {
-                this.data(this.data().filter(block => block.id !== block_id));
+            edit_task(block_id, task_id, value) {
+                const new_deck = this.data().map(block => block.id === block_id ? {
+                    ...block, tasks: block.tasks.map(task => task.id === task_id ? {
+                        ...task, name: value
+                    } : task)
+                } : block);
+                this.data(new_deck);
             }
         }
         __decorate([
@@ -10969,7 +11066,7 @@ var $;
                 return model;
             }
             block_list() {
-                return this.model().data().map(block => this.Block(block.id)) || [];
+                return [...this.model().data().map(block => this.Block(block.id)) || [], this.New_block()];
             }
             get_block(id) {
                 return this.model().data().find(block => block.id === id);
@@ -11001,6 +11098,10 @@ var $;
                 const [block_id, task_id] = id.split('__');
                 this.model().remove_task(block_id, task_id);
             }
+            edit_task(id, next) {
+                const [block_id, task_id] = id.split('__');
+                this.model().edit_task(block_id, task_id, next);
+            }
         }
         __decorate([
             $mol_mem
@@ -11015,6 +11116,19 @@ var $;
             }
         }
         $$.$bss_task_deck_block = $bss_task_deck_block;
+        class $bss_task_deck_task extends $.$bss_task_deck_task {
+            edit_task() {
+                if (this.edit_task_name()) {
+                    this.edit(this.edit_task_name());
+                    this.edit_task_name('');
+                    this.edit_checked(false);
+                }
+            }
+            content() {
+                return [this.edit_checked() ? this.Task_edit() : this.Task()];
+            }
+        }
+        $$.$bss_task_deck_task = $bss_task_deck_task;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
 //bss/task/deck/deck.view.ts
