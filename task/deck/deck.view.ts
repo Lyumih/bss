@@ -16,7 +16,7 @@ namespace $.$$ {
 		}
 
 		block_status( id: string ): string {
-			return this.get_block( id )?.name ?? 'Имя не задано'
+			return '### ' + this.get_block( id )?.name ?? 'Имя не задано'
 		}
 
 		add_block() {

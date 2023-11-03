@@ -1,5 +1,10 @@
+[bss_task_deck] {
+	flex-wrap: nowrap;
+}
+
 [bss_task_deck_block],
 [bss_task_deck_new_block] {
+	background: white;
 	width: 25rem;
 	border: 2px solid gray;
 	border-radius: 0.5rem;
@@ -12,7 +17,8 @@
 }
 
 [bss_task_deck_task] {
-	border: 2px solid gray;
+	background: lavenderblush;
+	border: 1px solid gray;
 	border-radius: 0.5rem;
 }
 
@@ -26,5 +32,7 @@
 }
 
 [bss_task_deck_new_block] {
+	min-width: 12rem !important;
+	width: 12rem;
 	max-width: 12rem;
 }
