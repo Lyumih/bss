@@ -38,7 +38,11 @@ namespace $.$$ {
 			return this.get_block( block_id )?.tasks?.find( task => task.id === task_id )
 		}
 
-		task_name( id: string ): string {
+		task_name( id: string, next?: string ): string {
+			if( next ) {
+				const [ block_id, task_id ] = id.split( '__' )
+				this.model().edit_task( block_id, task_id, next )
+			}
 			return this.get_task( id )?.name ?? 'Задача не задана'
 		}
 
@@ -51,13 +55,19 @@ namespace $.$$ {
 			this.model().remove_task( block_id, task_id )
 		}
 
+		@$mol_mem
 		blocks() {
-			return this.model().data().map( ( { id, name } ) => ( { id, name } ) )
+			let dict: { [ id: string ]: string } = {}
+			this.model().data().forEach( ( { id, name } ) => dict[ id ] = name )
+			return dict
 		}
 
-		edit_task( id: string, next: string ) {
+		selected( id: string, next?: string ): string {
 			const [ block_id, task_id ] = id.split( '__' )
-			this.model().edit_task( block_id, task_id, next )
+			if( next ) {
+				this.model().move_task( block_id, task_id, next )
+			}
+			return block_id
 		}
 	}
 
@@ -73,18 +83,9 @@ namespace $.$$ {
 
 	export class $bss_task_deck_task extends $.$bss_task_deck_task {
 
-		block_list(): readonly $mol_view[] {
-			return this.blocks().map( block => this.Block( block.id ) )
+		edit_list(): readonly any[] {
+			return this.edit_checked() ? [ this.Edit_task(), this.Move() ] : [ this.Task() ]
 		}
-
-		block_name( id: string ) {
-			return this.blocks().find( block => block.id === id )?.name
-		}
-
-		edit_task( id: string ) {
-			this.edit( id )
-		}
-
 	}
 
 }
