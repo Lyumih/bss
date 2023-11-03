@@ -1,6 +1,10 @@
 [bss_task_auth] {
 	background: white;
-	width: 20rem;
+	width: 25rem;
 	margin: auto;
 	border-radius: 10px;
+}
+
+[mol_form_foot] {
+	justify-content: center;
 }

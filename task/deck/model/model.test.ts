@@ -23,45 +23,45 @@ namespace $ {
 	model.data( [] )
 
 	$mol_test( {
-		'empty'() {
+		'Пустые карточки'() {
 			$mol_assert_like( [], blocks )
 		},
 
-		'add block'() {
+		'Добавить карточку'() {
 			model.generate_id = () => block.id
 			model.add_block( block.name )
 			blocks.push( block )
 			$mol_assert_like( model.data(), blocks )
 		},
 
-		'add task'() {
+		'Добавить задачу'() {
 			model.generate_id = () => task.id
 			model.add_task( block.id, task.name )
 			blocks[ 0 ].tasks.push( task )
 			$mol_assert_like( model.data(), blocks )
 		},
 
-		'add second block'() {
+		'Добавить вторую карточку'() {
 			model.generate_id = () => block_second.id
 			model.add_block( block_second.name )
 			blocks.push( block_second )
 			$mol_assert_like( model.data(), blocks )
 		},
 
-		'edit task'() {
+		'Переместить задачу'() {
 			model.edit_task( block.id, task.id, block_second.id )
 			blocks[ 0 ].tasks = []
 			blocks[ 1 ].tasks.push( task )
 			$mol_assert_like( model.data(), blocks )
 		},
 
-		'remove task'() {
+		'Удалить задачу'() {
 			model.remove_task( block.id, task.id )
 			blocks[ 1 ].tasks = []
 			$mol_assert_like( model.data(), blocks )
 		},
 
-		'remove deck'() {
+		'Удалить карточку'() {
 			model.remove_block( block.id )
 			blocks.splice( 0, 1 )
 			$mol_assert_like( model.data(), blocks )

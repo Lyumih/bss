@@ -1,4 +1,6 @@
 $bss_task_auth_login $mol_form
+	required_message \Заполните это поле
+	login_error_messae \Неверный логин или пароль
 	form_fields /
 		<= Email_field $mol_form_field
 			name \E-mail
@@ -14,6 +16,7 @@ $bss_task_auth_login $mol_form
 	buttons /
 		<= Login $mol_button_major
 			title \Войти
+			enabled? <=> login_verified? false
 			click? <=> login? null
 		<= Registration $mol_link
 			arg * page \registration

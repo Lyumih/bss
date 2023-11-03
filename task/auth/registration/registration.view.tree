@@ -1,4 +1,6 @@
 $bss_task_auth_registration $mol_form
+	required_message \Заполните это поле
+	password_message \Пароли не совпадают
 	form_fields /
 		<= Name_field $mol_form_field
 			name \Имя
@@ -43,6 +45,8 @@ $bss_task_auth_registration $mol_form
 	buttons /
 		<= Registration $mol_button_major
 			title \Зарегистрироваться
+			enabled? <=> registration_verified? false
+			click? <=> registration? null
 		<= Login $mol_link
 			arg * page \
 			title \Войти
