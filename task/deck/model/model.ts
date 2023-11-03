@@ -34,37 +34,8 @@ namespace $.$$ {
 
 		@$mol_mem
 		data_fetch() {
-			return [
-				{
-					id: crypto.randomUUID(),
-					name: 'В ожидании',
-					tasks: [
-						{
-							id: crypto.randomUUID(),
-							name: 'Создать сайт по макету',
-						},
-						{
-							id: crypto.randomUUID(),
-							name: 'Разработать дизайн геля для бритья'
-						}
-					]
-				},
-				{
-					id: crypto.randomUUID(),
-					name: 'В процессе',
-					tasks: [
-						{
-							id: crypto.randomUUID(),
-							name: 'Разместить сайт на сервере',
-						}
-					]
-				},
-				{
-					id: crypto.randomUUID(),
-					name: 'Готовые',
-					tasks: []
-				}
-			]
+			const url = 'https://raw.githubusercontent.com/Lyumih/bss/master/back/api/v1/task/task.json'
+			return this.$.$mol_fetch.json( url ) as $bss_task_deck_model_Deck[] || []
 		}
 
 		generate_id(): string {
