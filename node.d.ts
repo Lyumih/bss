@@ -2763,6 +2763,10 @@ declare namespace $.$$ {
         password_bid(): string;
         login_verified(next?: any): boolean;
         login(next?: any): void;
+        login_fetch(): {
+            email: string;
+            password: string;
+        }[];
     }
 }
 

@@ -9269,7 +9269,8 @@ var $;
                 return this.email_bid() === '' && this.password_bid() === '';
             }
             login(next) {
-                const users = this.$.$mol_state_local.value('users');
+                const users_local = this.$.$mol_state_local.value('users') || [];
+                const users = this.login_fetch().concat(users_local);
                 if (users && users.find(user => user.email === this.email() && user.password === this.$.$mol_base64_encode(this.password()))) {
                     this.$.$mol_state_local.value('user', {
                         email: this.email(),
@@ -9278,6 +9279,10 @@ var $;
                 else {
                     this.$.$mol_fail('Неверный логин или пароль');
                 }
+            }
+            login_fetch() {
+                const url = 'https://raw.githubusercontent.com/Lyumih/bss/master/back/api/v1/user/user.json';
+                return this.$.$mol_fetch.json(url);
             }
         }
         $$.$bss_task_auth_login = $bss_task_auth_login;
