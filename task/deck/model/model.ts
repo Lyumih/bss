@@ -54,6 +54,18 @@ namespace $.$$ {
 			return crypto.randomUUID()
 		}
 
+		add_block( name: string ) {
+			this.data( [ ...this.data(), {
+				id: this.generate_id(),
+				name,
+				tasks: []
+			} ] )
+		}
+		remove_block( block_id: string ) {
+			this.data( this.data().filter( block => block.id !== block_id ) )
+		}
+
+
 		add_task( id: string, value: string ) {
 			const new_deck = this.data().map( block => block.id === id ? {
 				...block, tasks: [ ...block.tasks, {
@@ -64,14 +76,6 @@ namespace $.$$ {
 			this.data( new_deck )
 		}
 
-		add_block( name: string ) {
-			this.data( [ ...this.data(), {
-				id: this.generate_id(),
-				name,
-				tasks: []
-			} ] )
-		}
-
 		remove_task( block_id: string, task_id: string ) {
 			const new_deck = this.data().map( block => block.id === block_id ? {
 				...block, tasks: block.tasks.filter( task => task.id !== task_id )
@@ -79,8 +83,13 @@ namespace $.$$ {
 			this.data( new_deck )
 		}
 
-		remove_block( block_id: string ) {
-			this.data( this.data().filter( block => block.id !== block_id ) )
+		edit_task( block_id: string, task_id: string, value: string ) {
+			const new_deck = this.data().map( block => block.id === block_id ? {
+				...block, tasks: block.tasks.map( task => task.id === task_id ? {
+					...task, name: value
+				} : task )
+			} : block )
+			this.data( new_deck )
 		}
 
 	}

@@ -8,7 +8,7 @@ namespace $.$$ {
 		}
 
 		block_list(): readonly $mol_view[] {
-			return this.model().data().map( block => this.Block( block.id ) ) || []
+			return [ ...this.model().data().map( block => this.Block( block.id ) ) || [], this.New_block() ]
 		}
 
 		get_block( id: string ) {
@@ -48,6 +48,11 @@ namespace $.$$ {
 			const [ block_id, task_id ] = id.split( '__' )
 			this.model().remove_task( block_id, task_id )
 		}
+
+		edit_task( id: string, next: string ) {
+			const [ block_id, task_id ] = id.split( '__' )
+			this.model().edit_task( block_id, task_id, next )
+		}
 	}
 
 	export class $bss_task_deck_block extends $.$bss_task_deck_block {
@@ -59,4 +64,20 @@ namespace $.$$ {
 			}
 		}
 	}
+
+	export class $bss_task_deck_task extends $.$bss_task_deck_task {
+
+		edit_task() {
+			if( this.edit_task_name() ) {
+				this.edit( this.edit_task_name() )
+				this.edit_task_name( '' )
+				this.edit_checked( false )
+			}
+		}
+
+		content(): readonly any[] {
+			return [ this.edit_checked() ? this.Task_edit() : this.Task() ]
+		}
+	}
+
 }

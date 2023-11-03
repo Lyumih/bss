@@ -1,19 +1,18 @@
 $bss_task_deck $mol_row
-	sub /
-		<= Blocks $mol_row sub <= block_list /
-			<= Block*0 $bss_task_deck_block
-				status <= block_status* \
-				add? <=> add_task*? null
-				remove? <=> remove_block*? null
-				tasks <= task_list* /
-					<= Task*0__1 $bss_task_deck_task
-						task_name <= task_name* \
-						remove <= remove_task*? null
-		<= Actions $mol_row sub /
-			<= New_block $mol_string
-				hint \Добавить блок
-				value? <=> new_block? \
-				submit? <=> add_block? null
+	sub <= block_list /
+		<= Block*0 $bss_task_deck_block
+			status <= block_status* \
+			add? <=> add_task*? null
+			remove? <=> remove_block*? null
+			tasks <= task_list* /
+				<= Task*0__1 $bss_task_deck_task
+					task_name <= task_name* \
+					edit? <=> edit_task*? null
+					remove? <=> remove_task*? null
+		<= New_block $mol_string
+			hint \Добавить блок
+			value? <=> new_block? \
+			submit? <=> add_block? null
 
 $bss_task_deck_block $mol_list
 	add? null
@@ -32,8 +31,16 @@ $bss_task_deck_block $mol_list
 				submit? <=> add_new? null
 
 $bss_task_deck_task $mol_row
+	edit? null
 	sub /
-		<= Task $mol_text text <= task_name \
+		<= Content $mol_view sub <= content /
+			<= Task $mol_text text <= task_name \
+			<= Task_edit $mol_string
+				value? <=> edit_task_name? \
+				submit? <=> edit_task? null
+		<= Edit $mol_check_icon
+			Icon <= Edit_icon $mol_icon_edit
+			checked? <=> edit_checked? false
 		<= Remove $mol_button_minor
 			hint \Удалить задачу
 			sub / <= Remove_icon $mol_icon_delete
