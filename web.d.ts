@@ -2600,6 +2600,8 @@ declare namespace $ {
 
 declare namespace $ {
     class $bss_task_auth_login extends $mol_form {
+        required_message(): string;
+        login_error_messae(): string;
         form_fields(): readonly any[];
         buttons(): readonly any[];
         email_bid(): string;
@@ -2610,14 +2612,26 @@ declare namespace $ {
         password(next?: any): string;
         Password_control(): $$.$mol_string;
         Password_field(): $$.$mol_form_field;
+        login_verified(next?: any): boolean;
         login(next?: any): any;
         Login(): $mol_button_major;
         Registration(): $$.$mol_link;
     }
 }
 
+declare namespace $ {
+    function $mol_base64_encode(src: string | Uint8Array): string;
+}
+
+declare namespace $ {
+    function $mol_base64_encode_web(str: string | Uint8Array): string;
+}
+
 declare namespace $.$$ {
     class $bss_task_auth_login extends $.$bss_task_auth_login {
+        email_bid(): string;
+        password_bid(): string;
+        login_verified(next?: any): boolean;
         login(next?: any): void;
     }
 }
@@ -2847,6 +2861,8 @@ declare namespace $ {
 
 declare namespace $ {
     class $bss_task_auth_registration extends $mol_form {
+        required_message(): string;
+        password_message(): string;
         form_fields(): readonly any[];
         buttons(): readonly any[];
         name_bid(): string;
@@ -2873,8 +2889,22 @@ declare namespace $ {
         position(next?: any): string;
         Position_control(): $$.$mol_select;
         Position_field(): $$.$mol_form_field;
+        registration_verified(next?: any): boolean;
+        registration(next?: any): any;
         Registration(): $mol_button_major;
         Login(): $$.$mol_link;
+    }
+}
+
+declare namespace $.$$ {
+    class $bss_task_auth_registration extends $.$bss_task_auth_registration {
+        name_bid(): string;
+        surname_bid(): string;
+        email_bid(): string;
+        password_bid(): string;
+        password_repeat_bid(): string;
+        registration_verified(next?: any): boolean;
+        registration(): void;
     }
 }
 
@@ -2882,7 +2912,7 @@ declare namespace $ {
     class $bss_task_auth extends $mol_list {
         rows(): readonly any[];
         Login(): $$.$bss_task_auth_login;
-        Registration(): $bss_task_auth_registration;
+        Registration(): $$.$bss_task_auth_registration;
     }
 }
 

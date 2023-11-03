@@ -3986,6 +3986,81 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    const png = new Uint8Array([0x1a, 0x0a, 0x00, 0x49, 0x48, 0x78, 0xda]);
+    $mol_test({
+        'base64 encode string'() {
+            $mol_assert_equal($mol_base64_encode('Hello, ΧΨΩЫ'), 'SGVsbG8sIM6nzqjOqdCr');
+        },
+        'base64 encode binary'() {
+            $mol_assert_equal($mol_base64_encode(png), 'GgoASUh42g==');
+        },
+    });
+})($ || ($ = {}));
+//mol/base64/encode/encode.test.ts
+;
+"use strict";
+var $;
+(function ($) {
+    const login = new $bss_task_auth_login;
+    $mol_test({
+        'Сообщения об ошибка'() {
+            $mol_assert_equal(login.required_message(), 'Заполните это поле');
+            $mol_assert_equal(login.login_error_messae(), 'Неверный логин или пароль');
+        },
+        'Данные верные'() {
+            login.email('ivanovmp@bss.ru');
+            login.password('123456');
+            $mol_assert_ok(login.login_verified());
+            $mol_assert_equal(login.email_bid(), '');
+            $mol_assert_equal(login.password_bid(), '');
+        },
+        'Пустые данные'() {
+            login.email('');
+            login.password('');
+            console.log(login.password(), login.password_bid());
+            $mol_assert_equal(login.email_bid(), 'Заполните это поле');
+            $mol_assert_equal(login.password_bid(), 'Заполните это поле');
+            $mol_assert_not(login.login_verified());
+        },
+    });
+})($ || ($ = {}));
+//bss/task/auth/login/login.view.test.ts
+;
+"use strict";
+var $;
+(function ($) {
+    const registration = new $bss_task_auth_registration;
+    $mol_test({
+        'Ошибки сообщений'() {
+            $mol_assert_equal(registration.required_message(), 'Заполните это поле');
+            $mol_assert_equal(registration.password_message(), 'Пароли не совпадают');
+        },
+        'Пустые поля'() {
+            $mol_assert_equal(registration.name_bid(), registration.surname_bid(), registration.email_bid(), registration.password_bid(), registration.password_repeat_bid(), registration.required_message());
+            $mol_assert_not(registration.registration_verified());
+        },
+        'Пароли не совпадают'() {
+            registration.password('123456');
+            registration.password_repeat('1234567');
+            $mol_assert_equal(registration.password_repeat_bid(), registration.password_message());
+        },
+        'Пароли совпадают'() {
+            registration.password_repeat('123456');
+            $mol_assert_equal(registration.password_bid(), '');
+        },
+        'Данные верные'() {
+            registration.name('Михаил');
+            registration.surname('Иванов');
+            registration.email('ivanovmp@bss.ru');
+            $mol_assert_ok(registration.registration_verified());
+        }
+    });
+})($ || ($ = {}));
+//bss/task/auth/registration/registration.view.test.ts
+;
+"use strict";
+var $;
+(function ($) {
     const blocks = [];
     const block = {
         id: 'block14a-076c-470e-b9ae-4b1dcaf8f02b',
@@ -4004,39 +4079,39 @@ var $;
     const model = new $$.$bss_task_deck_model;
     model.data([]);
     $mol_test({
-        'empty'() {
+        'Пустые карточки'() {
             $mol_assert_like([], blocks);
         },
-        'add block'() {
+        'Добавить карточку'() {
             model.generate_id = () => block.id;
             model.add_block(block.name);
             blocks.push(block);
             $mol_assert_like(model.data(), blocks);
         },
-        'add task'() {
+        'Добавить задачу'() {
             model.generate_id = () => task.id;
             model.add_task(block.id, task.name);
             blocks[0].tasks.push(task);
             $mol_assert_like(model.data(), blocks);
         },
-        'add second block'() {
+        'Добавить вторую карточку'() {
             model.generate_id = () => block_second.id;
             model.add_block(block_second.name);
             blocks.push(block_second);
             $mol_assert_like(model.data(), blocks);
         },
-        'edit task'() {
+        'Переместить задачу'() {
             model.edit_task(block.id, task.id, block_second.id);
             blocks[0].tasks = [];
             blocks[1].tasks.push(task);
             $mol_assert_like(model.data(), blocks);
         },
-        'remove task'() {
+        'Удалить задачу'() {
             model.remove_task(block.id, task.id);
             blocks[1].tasks = [];
             $mol_assert_like(model.data(), blocks);
         },
-        'remove deck'() {
+        'Удалить карточку'() {
             model.remove_block(block.id);
             blocks.splice(0, 1);
             $mol_assert_like(model.data(), blocks);

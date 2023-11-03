@@ -8493,6 +8493,12 @@ var $;
 var $;
 (function ($) {
     class $bss_task_auth_login extends $mol_form {
+        required_message() {
+            return "Заполните это поле";
+        }
+        login_error_messae() {
+            return "Неверный логин или пароль";
+        }
         form_fields() {
             return [
                 this.Email_field(),
@@ -8546,6 +8552,11 @@ var $;
             obj.control = () => this.Password_control();
             return obj;
         }
+        login_verified(next) {
+            if (next !== undefined)
+                return next;
+            return false;
+        }
         login(next) {
             if (next !== undefined)
                 return next;
@@ -8554,6 +8565,7 @@ var $;
         Login() {
             const obj = new this.$.$mol_button_major();
             obj.title = () => "Войти";
+            obj.enabled = (next) => this.login_verified(next);
             obj.click = (next) => this.login(next);
             return obj;
         }
@@ -8586,6 +8598,9 @@ var $;
     ], $bss_task_auth_login.prototype, "Password_field", null);
     __decorate([
         $mol_mem
+    ], $bss_task_auth_login.prototype, "login_verified", null);
+    __decorate([
+        $mol_mem
     ], $bss_task_auth_login.prototype, "login", null);
     __decorate([
         $mol_mem
@@ -8600,13 +8615,60 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    function $mol_base64_encode(src) {
+        throw new Error('Not implemented');
+    }
+    $.$mol_base64_encode = $mol_base64_encode;
+})($ || ($ = {}));
+//mol/base64/encode/encode.ts
+;
+"use strict";
+var $;
+(function ($) {
+    function binary_string(bytes) {
+        let binary = '';
+        if (typeof bytes !== 'string') {
+            for (const byte of bytes)
+                binary += String.fromCharCode(byte);
+        }
+        else {
+            binary = unescape(encodeURIComponent(bytes));
+        }
+        return binary;
+    }
+    function $mol_base64_encode_web(str) {
+        return $mol_dom_context.btoa(binary_string(str));
+    }
+    $.$mol_base64_encode_web = $mol_base64_encode_web;
+    $.$mol_base64_encode = $mol_base64_encode_web;
+})($ || ($ = {}));
+//mol/base64/encode/encode.web.ts
+;
+"use strict";
+var $;
+(function ($) {
     var $$;
     (function ($$) {
         class $bss_task_auth_login extends $.$bss_task_auth_login {
+            email_bid() {
+                return this.email().endsWith('@bss.ru') ? '' : this.required_message();
+            }
+            password_bid() {
+                return this.password().length >= 6 ? '' : this.required_message();
+            }
+            login_verified(next) {
+                return this.email_bid() === '' && this.password_bid() === '';
+            }
             login(next) {
-                this.$.$mol_state_local.value('user', {
-                    email: this.email(),
-                });
+                const users = this.$.$mol_state_local.value('users');
+                if (users && users.find(user => user.email === this.email() && user.password === this.$.$mol_base64_encode(this.password()))) {
+                    this.$.$mol_state_local.value('user', {
+                        email: this.email(),
+                    });
+                }
+                else {
+                    this.$.$mol_fail('Неверный логин или пароль');
+                }
             }
         }
         $$.$bss_task_auth_login = $bss_task_auth_login;
@@ -9689,6 +9751,12 @@ var $;
 var $;
 (function ($) {
     class $bss_task_auth_registration extends $mol_form {
+        required_message() {
+            return "Заполните это поле";
+        }
+        password_message() {
+            return "Пароли не совпадают";
+        }
         form_fields() {
             return [
                 this.Name_field(),
@@ -9836,9 +9904,21 @@ var $;
             obj.control = () => this.Position_control();
             return obj;
         }
+        registration_verified(next) {
+            if (next !== undefined)
+                return next;
+            return false;
+        }
+        registration(next) {
+            if (next !== undefined)
+                return next;
+            return null;
+        }
         Registration() {
             const obj = new this.$.$mol_button_major();
             obj.title = () => "Зарегистрироваться";
+            obj.enabled = (next) => this.registration_verified(next);
+            obj.click = (next) => this.registration(next);
             return obj;
         }
         Login() {
@@ -9906,6 +9986,12 @@ var $;
     ], $bss_task_auth_registration.prototype, "Position_field", null);
     __decorate([
         $mol_mem
+    ], $bss_task_auth_registration.prototype, "registration_verified", null);
+    __decorate([
+        $mol_mem
+    ], $bss_task_auth_registration.prototype, "registration", null);
+    __decorate([
+        $mol_mem
     ], $bss_task_auth_registration.prototype, "Registration", null);
     __decorate([
         $mol_mem
@@ -9913,6 +9999,54 @@ var $;
     $.$bss_task_auth_registration = $bss_task_auth_registration;
 })($ || ($ = {}));
 //bss/task/auth/registration/-view.tree/registration.view.tree.ts
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $bss_task_auth_registration extends $.$bss_task_auth_registration {
+            name_bid() {
+                return this.name().length >= 2 ? '' : this.required_message();
+            }
+            surname_bid() {
+                return this.surname().length >= 2 ? '' : this.required_message();
+            }
+            email_bid() {
+                return this.email().endsWith('@bss.ru') ? '' : this.required_message();
+            }
+            password_bid() {
+                return this.password().length >= 6 ? '' : this.required_message();
+            }
+            password_repeat_bid() {
+                if (this.password_repeat().length < 6)
+                    return this.required_message();
+                else if (this.password() !== this.password_repeat())
+                    return this.password_message();
+                return '';
+            }
+            registration_verified(next) {
+                return this.name_bid() === '' && this.surname_bid() === '' && this.email_bid() === '' && this.password_bid() === '' && this.password_repeat_bid() === '' && this.position_bid() === '';
+            }
+            registration() {
+                const new_user = {
+                    name: this.name(),
+                    surname: this.surname(),
+                    email: this.email(),
+                    password: $mol_base64_encode(this.password()),
+                    position: this.position(),
+                };
+                const users = this.$.$mol_state_local.value('users');
+                if (users?.find(user => user.email === new_user.email))
+                    return;
+                this.$.$mol_state_local.value('users', users ? [...users, new_user] : [new_user]);
+                this.$.$mol_state_local.value('user', new_user);
+            }
+        }
+        $$.$bss_task_auth_registration = $bss_task_auth_registration;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//bss/task/auth/registration/registration.view.ts
 ;
 "use strict";
 var $;
@@ -9962,7 +10096,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $mol_style_attach("bss/task/auth/auth.view.css", "[bss_task_auth] {\n\tbackground: white;\n\twidth: 20rem;\n\tmargin: auto;\n\tborder-radius: 10px;\n}");
+    $mol_style_attach("bss/task/auth/auth.view.css", "[bss_task_auth] {\n\tbackground: white;\n\twidth: 25rem;\n\tmargin: auto;\n\tborder-radius: 10px;\n}\n\n[mol_form_foot] {\n\tjustify-content: center;\n}");
 })($ || ($ = {}));
 //bss/task/auth/-css/auth.view.css.ts
 ;

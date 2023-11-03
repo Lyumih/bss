@@ -201,6 +201,8 @@
     "$mol_string",
     "$mol_hotkey",
     "$mol_button_major",
+    "$mol_base64_encode",
+    "$mol_base64",
     "$bss_task_auth_registration",
     "$mol_select",
     "$mol_pick",
