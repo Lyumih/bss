@@ -1,4 +1,5 @@
-[bss_task_deck_block] {
+[bss_task_deck_block],
+[bss_task_deck_new_block] {
 	border: 2px solid gray;
 	border-radius: 0.5rem;
 	padding: 0.5rem;
@@ -19,6 +20,6 @@
 }
 
 [bss_task_deck_block_status],
-[bss_task_deck_task_content] {
+[bss_task_deck_task_task] {
 	flex: 1;
 }

@@ -83,13 +83,29 @@ namespace $.$$ {
 			this.data( new_deck )
 		}
 
-		edit_task( block_id: string, task_id: string, value: string ) {
-			const new_deck = this.data().map( block => block.id === block_id ? {
-				...block, tasks: block.tasks.map( task => task.id === task_id ? {
-					...task, name: value
-				} : task )
-			} : block )
-			this.data( new_deck )
+		edit_task( block_id: string, task_id: string, target_block_id: string ) {
+			if( block_id === target_block_id ) return
+
+			const task = this.data().find( block => block.id === block_id )?.tasks.find( task => task.id === task_id )
+
+			if( task ) {
+
+				const new_deck = this.data().map( block => {
+					if( block.id === block_id ) {
+						return {
+							...block, tasks: block.tasks.filter( task => task.id !== task_id )
+						}
+					} else if( block.id === target_block_id ) {
+						return {
+							...block, tasks: [ ...block.tasks, task ]
+						}
+					} else {
+						return block
+					}
+				} )
+
+				this.data( new_deck )
+			}
 		}
 
 	}

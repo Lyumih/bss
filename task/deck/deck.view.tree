@@ -6,6 +6,7 @@ $bss_task_deck $mol_row
 			remove? <=> remove_block*? null
 			tasks <= task_list* /
 				<= Task*0__1 $bss_task_deck_task
+					blocks <= blocks /
 					task_name <= task_name* \
 					edit? <=> edit_task*? null
 					remove? <=> remove_task*? null
@@ -31,16 +32,17 @@ $bss_task_deck_block $mol_list
 				submit? <=> add_new? null
 
 $bss_task_deck_task $mol_row
+	blocks /
 	edit? null
 	sub /
-		<= Content $mol_view sub <= content /
-			<= Task $mol_text text <= task_name \
-			<= Task_edit $mol_string
-				value? <=> edit_task_name? \
-				submit? <=> edit_task? null
-		<= Edit $mol_check_icon
-			Icon <= Edit_icon $mol_icon_edit
-			checked? <=> edit_checked? false
+		<= Task $mol_text text <= task_name \
+		<= Edit $mol_pick
+			title <= Edit_icon $mol_icon_edit
+			bubble_content /
+				<= Block_select $mol_list rows <= block_list /
+					<= Block*0 $mol_button_minor
+						title <= block_name* \
+						click? <=> edit_task*? null
 		<= Remove $mol_button_minor
 			hint \Удалить задачу
 			sub / <= Remove_icon $mol_icon_delete
