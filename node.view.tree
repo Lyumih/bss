@@ -32,36 +32,68 @@ $mol_page $mol_view
 			dom_name \footer
 			sub <= foot /$mol_view
 
-$mol_svg $mol_view
-	dom_name \svg
-	dom_name_space \http://www.w3.org/2000/svg
-	font_size 16
-	font_family \
-	style_size *
+$mol_list $mol_view
+	render_visible_only true
+	render_over 0
+	sub <= rows /$mol_view
+	Empty $mol_view
+	Gap_before $mol_view style * paddingTop <= gap_before 0
+	Gap_after $mol_view style * paddingTop <= gap_after 0
+	view_window /
+		0
+		0
 
-$mol_svg_root $mol_svg
-	dom_name \svg
+$mol_paragraph $mol_view
+	line_height 24
+	letter_width 7
+	width_limit +Infinity
+	row_width 0
+	sub / <= title
+
+$mol_stack $mol_view
+
+$mol_dimmer $mol_paragraph
+	haystack \
+	needle \
+	sub <= parts /$mol_view_content
+	Low* $mol_paragraph
+		sub /
+			<= string* \
+	High* $mol_paragraph
+		sub /
+			<= string* \
+
+$mol_text_code_token $mol_dimmer
 	attr *
 		^
-		viewBox <= view_box \0 0 100 100
-		preserveAspectRatio <= aspect \xMidYMid
+		mol_text_code_token_type <= type \
 
-$mol_svg_path $mol_svg
-	dom_name \path
+$mol_text_code_token_link $mol_text_code_token
+	dom_name \a
+	type \code-link
 	attr *
 		^
-		d <= geometry \
+		href <= uri \
+		target \_blank
 
-
-$mol_icon $mol_svg_root
-	view_box \0 0 24 24
-	minimal_width 16
-	minimal_height 16
-	sub /
-		<= Path $mol_svg_path
-			geometry <= path \
-
-$mol_icon_logout $mol_icon path \M16,17V14H9V10H16V7L21,12L16,17M14,2C15.1,2 16,2.9 16,4V6H14V4H5V20H14V18H16V20C16,21.1 15.1,22 14,22H5C3.9,22 3,21.1 3,20V4C3,2.9 3.9,2 5,2H14Z
+$mol_text_code_row $mol_paragraph
+	text \
+	minimal_height 24
+	numb_showed true
+	syntax null
+	uri_resolve* \
+	Numb $mol_view
+		sub /
+			<= numb 0
+	Token* $mol_text_code_token
+		type <= token_type* \
+		haystack <= token_text* \
+		needle <= highlight \
+	Token_link* $mol_text_code_token_link
+		haystack <= token_text* \
+		needle <= highlight \
+		uri <= token_uri* \
+	find_pos* null
 
 $mol_speck $mol_view
 	attr *
@@ -99,392 +131,34 @@ $mol_button_typed $mol_button
 
 $mol_button_minor $mol_button_typed
 
-$mol_list $mol_view
-	render_visible_only true
-	render_over 0
-	sub <= rows /$mol_view
-	Empty $mol_view
-	Gap_before $mol_view style * paddingTop <= gap_before 0
-	Gap_after $mol_view style * paddingTop <= gap_after 0
-	view_window /
-		0
-		0
+$mol_svg $mol_view
+	dom_name \svg
+	dom_name_space \http://www.w3.org/2000/svg
+	font_size 16
+	font_family \
+	style_size *
 
-$mol_labeler $mol_list
-	rows /
-		<= Label $mol_view
-			minimal_height 32
-			sub <= label /$mol_view_content
-				<= title
-		<= Content $mol_view
-			minimal_height 24
-			sub <= content /
-
-$mol_form_field $mol_labeler
-	bids /string
-	label /
-		<= name \
-		<= Bid $mol_view
-			sub / <= bid \
-	content / <= control null
-
-$mol_row $mol_view
-
-$mol_form $mol_list
-	submit_allowed true
-	submit_blocked false
-	event *
-		^
-		keydown?event <=> keydown?event null
-	submit?event null
-	rows /
-		<= Body $mol_list
-			sub <= body <= form_fields /$mol_form_field
-		<= Foot $mol_row
-			sub <= foot <= buttons /$mol_view
-
-$mol_hotkey $mol_plugin
-	event *
-		^
-		keydown?event <=> keydown?event null
-	key *
-	mod_ctrl false
-	mod_alt false
-	mod_shift false
-
-$mol_string $mol_view
-	dom_name \input
-	enabled true
-	minimal_height 40
-	autocomplete false
-	selection? /number
-		0
-		0
-	auto /
-		<= selection_watcher null
-	field *
-		^
-		disabled <= disabled false
-		value <= value_changed? <=> value? \
-		placeholder <= hint_visible <= hint \
-		spellcheck <= spellcheck true
-		autocomplete <= autocomplete_native \
-		selectionEnd <= selection_end 0
-		selectionStart <= selection_start 0
-		inputMode <= keyboard \text
-		enterkeyhint <= enter \go
+$mol_svg_root $mol_svg
+	dom_name \svg
 	attr *
 		^
-		maxlength <= length_max +Infinity
-		type <= type? \text
-	event *
-		^
-		input?event <=> event_change?event null
-	plugins /
-		<= Submit $mol_hotkey
-			mod_ctrl <= submit_with_ctrl false
-			key * enter?event <=> submit?event null
+		viewBox <= view_box \0 0 100 100
+		preserveAspectRatio <= aspect \xMidYMid
 
-$mol_button_major $mol_button_typed
+$mol_svg_path $mol_svg
+	dom_name \path
 	attr *
 		^
-		mol_theme \$mol_theme_accent
-
-$mol_link $mol_view
-	uri \
-	dom_name \a
-	uri_off \
-	uri_native null
-	external false
-	attr *
-		^
-		href <= uri_toggle \
-		title <= hint_safe <= hint \
-		target <= target \_self
-		download <= file_name \
-		mol_link_current <= current false
-	sub /$mol_view_content
-		<= title
-	arg *
-	event *
-		^
-		click?event <=> click?event <=> event_click?event null
-
-$bss_task_auth_login $mol_form
-	form_fields /
-		<= Email_field $mol_form_field
-			name \E-mail
-			bid <= email_bid \
-			control <= Email_control $mol_string
-				type \email
-				value? <=> email? \
-		<= Password_field $mol_form_field
-			name \Пароль
-			bid <= password_bid \
-			control <= Password_control $mol_string
-				type \password
-				value? <=> password? \
-	buttons /
-		<= Login $mol_button_major
-			title \Войти
-			click? <=> login? null
-		<= Registration $mol_link
-			arg * page \registration
-			title \Создать новый аккаунт
+		d <= geometry \
 
 
-$mol_pop $mol_view
-	showed? false
-	align_vert \
-	align_hor \
-	prefer \vert
+$mol_icon $mol_svg_root
+	view_box \0 0 24 24
+	minimal_width 16
+	minimal_height 16
 	sub /
-		<= Anchor null
-	sub_visible /
-		<= Anchor
-		<= Bubble $mol_pop_bubble
-			align <= align \bottom_center
-			content <= bubble_content /$mol_view_content
-			height_max <= height_max 9999
-
-$mol_pop_bubble $mol_view
-	sub <= content /$mol_view_content
-	style *
-		^
-		maxHeight <= height_max 9999
-	attr *
-		^
-		mol_pop_align <= align \
-		tabindex 0
-
-$mol_check $mol_button_minor
-	attr *
-		^
-		mol_check_checked <= checked? false
-		aria-checked <= aria_checked \false
-		role <= aria_role \checkbox
-	sub /$mol_view_content
-		<= Icon null
-		<= label /
-			<= Title $mol_view
-				sub /
-					<= title \
-
-$mol_pick $mol_pop
-	event *
-		^
-		keydown?event <=> keydown?event null
-	Anchor <= Trigger $mol_check
-		minimal_width 40
-		minimal_height 40
-		enabled <= trigger_enabled true
-		checked? <=> showed?
-		sub <= trigger_content /$mol_view_content
-			<= title
-		hint <= hint \
-
-$mol_nav $mol_plugin
-	cycle? false
-	-
-	mod_ctrl false
-	mod_shift false
-	mod_alt false
-	-
-	keys_x? /
-	keys_y? /
-	-
-	current_x? null
-	current_y? null
-	-
-	event_up?event null
-	event_down?event null
-	event_left?event null
-	event_right?event null
-	event *
-		^
-		keydown?event <=> event_key?event null
-
-$mol_icon_cross $mol_icon path \M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z
-
-$mol_paragraph $mol_view
-	line_height 24
-	letter_width 7
-	width_limit +Infinity
-	row_width 0
-	sub / <= title
-
-$mol_dimmer $mol_paragraph
-	haystack \
-	needle \
-	sub <= parts /$mol_view_content
-	Low* $mol_paragraph
-		sub /
-			<= string* \
-	High* $mol_paragraph
-		sub /
-			<= string* \
-
-$mol_search $mol_pop
-	query? \
-	suggests /string
-	plugins /$mol_plugin
-		^
-		<= Hotkey $mol_hotkey
-			key * escape? <=> clear? null
-		<= Nav $mol_nav
-			keys_y <= nav_components /$mol_view
-			current_y?component <=> nav_focused?component null
-	showed? <=> suggests_showed? false
-	align_hor \right
-	Anchor $mol_view
-		sub <= anchor_content /
-			<= Query $mol_string
-				value? <=> query? \
-				hint <= hint @ \Search...
-				submit?event <=> submit?event null
-				enabled <= enabled true
-				keyboard <= keyboard \search
-				enter <= enter \search
-				bring => bring
-			<= Clear $mol_button_minor
-				hint @ \Clear
-				click?event <=> clear?event null
-				sub /
-					<= Clear_icon $mol_icon_cross
-	bubble_content /$mol_view_content
-		<= Menu $mol_list
-			rows <= menu_items /$mol_view
-	Suggest* $mol_button_minor
-		click?event <=> suggest_select*?event null
-		sub <= suggest_content* /$mol_view_content
-			<= Suggest_label* $mol_dimmer
-				haystack <= suggest_label* \
-				needle <= query? \
-
-$mol_icon_dots_vertical $mol_icon path \M12,16C13.1,16 14,16.9 14,18C14,19.1 13.1,20 12,20C10.9,20 10,19.1 10,18C10,16.9 10.9,16 12,16M12,10C13.1,10 14,10.9 14,12C14,13.1 13.1,14 12,14C10.9,14 10,13.1 10,12C10,10.9 10.9,10 12,10M12,4C13.1,4 14,4.9 14,6C14,7.1 13.1,8 12,8C10.9,8 10,7.1 10,6C10,4.9 10.9,4 12,4Z
-
-$mol_select $mol_pick
-	dictionary? *
-	options /string
-	value? \
-	option_label_default \
-	Option_row* $mol_button_minor
-		event_click?event <=> event_select*?event null
-		sub <= option_content* /
-			<= Option_label* $mol_dimmer
-				haystack <= option_label* \
-				needle <= filter_pattern? \
-	No_options $mol_view
-		sub /
-			<= no_options_message @ \No options
-	plugins /
-		^
-		<= Nav $mol_nav
-			keys_y <= nav_components /$mol_view
-			current_y?component <=> option_focused?component null
-			cycle? <=> nav_cycle? true
-	hint @ \Pick..
-	bubble_content /
-		<= Filter
-		<= Bubble_pane $mol_scroll
-			sub /
-				<= Menu $mol_list
-					rows <= menu_content /$mol_view
-	Filter $mol_search
-		query? <=> filter_pattern? \
-		hint <= filter_hint @ \Filter..
-		submit?event <=> submit?event null
-		enabled <= enabled true
-	Trigger_icon $mol_icon_dots_vertical
-
-$bss_task_auth_registration $mol_form
-	form_fields /
-		<= Name_field $mol_form_field
-			name \Имя
-			bid <= name_bid \
-			control <= Name_control $mol_string
-				value? <=> name? \
-		<= Surname_field $mol_form_field
-			name \Фамилия
-			bid <= surname_bid \
-			control <= Surname_control $mol_string
-				value? <=> surname? \
-		<= Email_field $mol_form_field
-			name \E-mail
-			bid <= email_bid \
-			control <= Email_control $mol_string
-				type \email
-				value? <=> email? \
-		<= Password_field $mol_form_field
-			name \Пароль
-			bid <= password_bid \
-			control <= Password_control $mol_string
-				type \password
-				value? <=> password? \
-		<= Password_repeat_field $mol_form_field
-			name \Подтвердите пароль
-			bid <= password_repeat_bid \
-			control <= Password_repeat_control $mol_string
-				type \password
-				value? <=> password_repeat? \
-		<= Position_field $mol_form_field
-			name \Должность
-			bid <= position_bid \
-			control <= Position_control $mol_select
-				Filter null
-				Trigger_icon null
-				value? <=> position? \manager
-				dictionary *
-					manager \Руководитель
-					designer \Дизайнер
-					copywriter \Копирайтер
-					programmer \Программист
-					layout_designer \Верстальщик
-	buttons /
-		<= Registration $mol_button_major
-			title \Зарегистрироваться
-		<= Login $mol_link
-			arg * page \
-			title \Войти
-
-$bss_task_auth $mol_list
-	rows /
-		<= Login $bss_task_auth_login
-		<= Registration $bss_task_auth_registration
-
-$mol_stack $mol_view
-
-$mol_text_code_token $mol_dimmer
-	attr *
-		^
-		mol_text_code_token_type <= type \
-
-$mol_text_code_token_link $mol_text_code_token
-	dom_name \a
-	type \code-link
-	attr *
-		^
-		href <= uri \
-		target \_blank
-
-$mol_text_code_row $mol_paragraph
-	text \
-	minimal_height 24
-	numb_showed true
-	syntax null
-	uri_resolve* \
-	Numb $mol_view
-		sub /
-			<= numb 0
-	Token* $mol_text_code_token
-		type <= token_type* \
-		haystack <= token_text* \
-		needle <= highlight \
-	Token_link* $mol_text_code_token_link
-		haystack <= token_text* \
-		needle <= highlight \
-		uri <= token_uri* \
-	find_pos* null
+		<= Path $mol_svg_path
+			geometry <= path \
 
 $mol_icon_clipboard $mol_icon path \M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5C3.9,3 3,3.9 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.9 20.1,3 19,3M12,3C12.55,3 13,3.45 13,4C13,4.55 12.55,5 12,5C11.45,5 11,4.55 11,4C11,3.45 11.45,3 12,3
 
@@ -531,6 +205,19 @@ $mol_float $mol_view
 	style *
 		^
 		minHeight \auto
+
+$mol_check $mol_button_minor
+	attr *
+		^
+		mol_check_checked <= checked? false
+		aria-checked <= aria_checked \false
+		role <= aria_role \checkbox
+	sub /$mol_view_content
+		<= Icon null
+		<= label /
+			<= Title $mol_view
+				sub /
+					<= title \
 
 $mol_icon_chevron $mol_icon path \M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z
 
@@ -595,6 +282,26 @@ $mol_grid_cell $mol_view
 	minimal_height 40
 
 $mol_grid_number $mol_grid_cell
+
+$mol_link $mol_view
+	uri \
+	dom_name \a
+	uri_off \
+	uri_native null
+	external false
+	attr *
+		^
+		href <= uri_toggle \
+		title <= hint_safe <= hint \
+		target <= target \_self
+		download <= file_name \
+		mol_link_current <= current false
+	sub /$mol_view_content
+		<= title
+	arg *
+	event *
+		^
+		click?event <=> click?event <=> event_click?event null
 
 $mol_image $mol_view
 	dom_name \img
@@ -778,23 +485,300 @@ $mol_text_span $mol_paragraph
 		^
 		mol_text_type <= type \
 
+$mol_icon_logout $mol_icon path \M16,17V14H9V10H16V7L21,12L16,17M14,2C15.1,2 16,2.9 16,4V6H14V4H5V20H14V18H16V20C16,21.1 15.1,22 14,22H5C3.9,22 3,21.1 3,20V4C3,2.9 3.9,2 5,2H14Z
+
+$mol_labeler $mol_list
+	rows /
+		<= Label $mol_view
+			minimal_height 32
+			sub <= label /$mol_view_content
+				<= title
+		<= Content $mol_view
+			minimal_height 24
+			sub <= content /
+
+$mol_form_field $mol_labeler
+	bids /string
+	label /
+		<= name \
+		<= Bid $mol_view
+			sub / <= bid \
+	content / <= control null
+
+$mol_row $mol_view
+
+$mol_form $mol_list
+	submit_allowed true
+	submit_blocked false
+	event *
+		^
+		keydown?event <=> keydown?event null
+	submit?event null
+	rows /
+		<= Body $mol_list
+			sub <= body <= form_fields /$mol_form_field
+		<= Foot $mol_row
+			sub <= foot <= buttons /$mol_view
+
+$mol_hotkey $mol_plugin
+	event *
+		^
+		keydown?event <=> keydown?event null
+	key *
+	mod_ctrl false
+	mod_alt false
+	mod_shift false
+
+$mol_string $mol_view
+	dom_name \input
+	enabled true
+	minimal_height 40
+	autocomplete false
+	selection? /number
+		0
+		0
+	auto /
+		<= selection_watcher null
+	field *
+		^
+		disabled <= disabled false
+		value <= value_changed? <=> value? \
+		placeholder <= hint_visible <= hint \
+		spellcheck <= spellcheck true
+		autocomplete <= autocomplete_native \
+		selectionEnd <= selection_end 0
+		selectionStart <= selection_start 0
+		inputMode <= keyboard \text
+		enterkeyhint <= enter \go
+	attr *
+		^
+		maxlength <= length_max +Infinity
+		type <= type? \text
+	event *
+		^
+		input?event <=> event_change?event null
+	plugins /
+		<= Submit $mol_hotkey
+			mod_ctrl <= submit_with_ctrl false
+			key * enter?event <=> submit?event null
+
+$mol_button_major $mol_button_typed
+	attr *
+		^
+		mol_theme \$mol_theme_accent
+
+$bss_task_auth_login $mol_form
+	form_fields /
+		<= Email_field $mol_form_field
+			name \E-mail
+			bid <= email_bid \
+			control <= Email_control $mol_string
+				value? <=> email? \
+		<= Password_field $mol_form_field
+			name \Пароль
+			bid <= password_bid \
+			control <= Password_control $mol_string
+				type \password
+				value? <=> password? \
+	buttons /
+		<= Login $mol_button_major
+			title \Войти
+			click? <=> login? null
+		<= Registration $mol_link
+			arg * page \registration
+			title \Создать новый аккаунт
+
+
+$mol_pop $mol_view
+	showed? false
+	align_vert \
+	align_hor \
+	prefer \vert
+	sub /
+		<= Anchor null
+	sub_visible /
+		<= Anchor
+		<= Bubble $mol_pop_bubble
+			align <= align \bottom_center
+			content <= bubble_content /$mol_view_content
+			height_max <= height_max 9999
+
+$mol_pop_bubble $mol_view
+	sub <= content /$mol_view_content
+	style *
+		^
+		maxHeight <= height_max 9999
+	attr *
+		^
+		mol_pop_align <= align \
+		tabindex 0
+
+$mol_pick $mol_pop
+	event *
+		^
+		keydown?event <=> keydown?event null
+	Anchor <= Trigger $mol_check
+		minimal_width 40
+		minimal_height 40
+		enabled <= trigger_enabled true
+		checked? <=> showed?
+		sub <= trigger_content /$mol_view_content
+			<= title
+		hint <= hint \
+
+$mol_nav $mol_plugin
+	cycle? false
+	-
+	mod_ctrl false
+	mod_shift false
+	mod_alt false
+	-
+	keys_x? /
+	keys_y? /
+	-
+	current_x? null
+	current_y? null
+	-
+	event_up?event null
+	event_down?event null
+	event_left?event null
+	event_right?event null
+	event *
+		^
+		keydown?event <=> event_key?event null
+
+$mol_icon_cross $mol_icon path \M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z
+
+$mol_search $mol_pop
+	query? \
+	suggests /string
+	plugins /$mol_plugin
+		^
+		<= Hotkey $mol_hotkey
+			key * escape? <=> clear? null
+		<= Nav $mol_nav
+			keys_y <= nav_components /$mol_view
+			current_y?component <=> nav_focused?component null
+	showed? <=> suggests_showed? false
+	align_hor \right
+	Anchor $mol_view
+		sub <= anchor_content /
+			<= Query $mol_string
+				value? <=> query? \
+				hint <= hint @ \Search...
+				submit?event <=> submit?event null
+				enabled <= enabled true
+				keyboard <= keyboard \search
+				enter <= enter \search
+				bring => bring
+			<= Clear $mol_button_minor
+				hint @ \Clear
+				click?event <=> clear?event null
+				sub /
+					<= Clear_icon $mol_icon_cross
+	bubble_content /$mol_view_content
+		<= Menu $mol_list
+			rows <= menu_items /$mol_view
+	Suggest* $mol_button_minor
+		click?event <=> suggest_select*?event null
+		sub <= suggest_content* /$mol_view_content
+			<= Suggest_label* $mol_dimmer
+				haystack <= suggest_label* \
+				needle <= query? \
+
+$mol_icon_dots_vertical $mol_icon path \M12,16C13.1,16 14,16.9 14,18C14,19.1 13.1,20 12,20C10.9,20 10,19.1 10,18C10,16.9 10.9,16 12,16M12,10C13.1,10 14,10.9 14,12C14,13.1 13.1,14 12,14C10.9,14 10,13.1 10,12C10,10.9 10.9,10 12,10M12,4C13.1,4 14,4.9 14,6C14,7.1 13.1,8 12,8C10.9,8 10,7.1 10,6C10,4.9 10.9,4 12,4Z
+
+$mol_select $mol_pick
+	dictionary? *
+	options /string
+	value? \
+	option_label_default \
+	Option_row* $mol_button_minor
+		event_click?event <=> event_select*?event null
+		sub <= option_content* /
+			<= Option_label* $mol_dimmer
+				haystack <= option_label* \
+				needle <= filter_pattern? \
+	No_options $mol_view
+		sub /
+			<= no_options_message @ \No options
+	plugins /
+		^
+		<= Nav $mol_nav
+			keys_y <= nav_components /$mol_view
+			current_y?component <=> option_focused?component null
+			cycle? <=> nav_cycle? true
+	hint @ \Pick..
+	bubble_content /
+		<= Filter
+		<= Bubble_pane $mol_scroll
+			sub /
+				<= Menu $mol_list
+					rows <= menu_content /$mol_view
+	Filter $mol_search
+		query? <=> filter_pattern? \
+		hint <= filter_hint @ \Filter..
+		submit?event <=> submit?event null
+		enabled <= enabled true
+	Trigger_icon $mol_icon_dots_vertical
+
+$bss_task_auth_registration $mol_form
+	form_fields /
+		<= Name_field $mol_form_field
+			name \Имя
+			bid <= name_bid \
+			control <= Name_control $mol_string
+				value? <=> name? \
+		<= Surname_field $mol_form_field
+			name \Фамилия
+			bid <= surname_bid \
+			control <= Surname_control $mol_string
+				value? <=> surname? \
+		<= Email_field $mol_form_field
+			name \E-mail
+			bid <= email_bid \
+			control <= Email_control $mol_string
+				value? <=> email? \
+		<= Password_field $mol_form_field
+			name \Пароль
+			bid <= password_bid \
+			control <= Password_control $mol_string
+				type \password
+				value? <=> password? \
+		<= Password_repeat_field $mol_form_field
+			name \Подтвердите пароль
+			bid <= password_repeat_bid \
+			control <= Password_repeat_control $mol_string
+				type \password
+				value? <=> password_repeat? \
+		<= Position_field $mol_form_field
+			name \Должность
+			bid <= position_bid \
+			control <= Position_control $mol_select
+				Filter null
+				Trigger_icon null
+				value? <=> position? \manager
+				dictionary *
+					manager \Руководитель
+					designer \Дизайнер
+					copywriter \Копирайтер
+					programmer \Программист
+					layout_designer \Верстальщик
+	buttons /
+		<= Registration $mol_button_major
+			title \Зарегистрироваться
+		<= Login $mol_link
+			arg * page \
+			title \Войти
+
+$bss_task_auth $mol_list
+	rows /
+		<= Login $bss_task_auth_login
+		<= Registration $bss_task_auth_registration
+
 $mol_icon_delete $mol_icon path \M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19C6,20.1 6.9,21 8,21H16C17.1,21 18,20.1 18,19V7H6V19Z
 
 $mol_icon_edit $mol_icon path \M5,3C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19H5V5H12V3H5M17.78,4C17.61,4 17.43,4.07 17.3,4.2L16.08,5.41L18.58,7.91L19.8,6.7C20.06,6.44 20.06,6 19.8,5.75L18.25,4.2C18.12,4.07 17.95,4 17.78,4M15.37,6.12L8,13.5V16H10.5L17.87,8.62L15.37,6.12Z
-
-$mol_text_list $mol_text
-	auto_scroll null
-	attr *
-		^
-		mol_text_list_type <= type \
-	Paragraph* $mol_text_list_item
-		index <= item_index*
-		sub <= block_content*
-
-$mol_text_list_item $mol_paragraph
-	attr *
-		^
-		mol_text_list_item_index <= index 0
 
 $bss_task_deck $mol_row
 	sub <= block_list /
@@ -846,11 +830,26 @@ $bss_task_deck_task $mol_row
 			sub / <= Remove_icon $mol_icon_delete
 			click? <=> remove? null
 
+$mol_text_list $mol_text
+	auto_scroll null
+	attr *
+		^
+		mol_text_list_type <= type \
+	Paragraph* $mol_text_list_item
+		index <= item_index*
+		sub <= block_content*
+
+$mol_text_list_item $mol_paragraph
+	attr *
+		^
+		mol_text_list_item_index <= index 0
+
 $bss_task $mol_page
 	title \BSS Задачи
 	attr *
 		mol_theme \$mol_theme_light
 	tools /
+		<= Email $mol_text text <= email \
 		<= Logout $mol_button_minor
 			click? <= logout? null
 			sub / <= Logout_icon $mol_icon_logout
