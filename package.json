@@ -216,6 +216,8 @@
     "$bss_task_deck",
     "$mol_icon_delete",
     "$mol_icon_edit",
+    "$mol_check_box",
+    "$mol_icon_tick",
     "$bss_task_deck_model"
   ],
   "dependencies": {

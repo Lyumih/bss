@@ -4101,9 +4101,14 @@ var $;
             $mol_assert_like(model.data(), blocks);
         },
         'Переместить задачу'() {
-            model.edit_task(block.id, task.id, block_second.id);
+            model.move_task(block.id, task.id, block_second.id);
             blocks[0].tasks = [];
             blocks[1].tasks.push(task);
+            $mol_assert_like(model.data(), blocks);
+        },
+        'Обновить задачу'() {
+            model.edit_task(block.id, task.id, 'Обновить сайт');
+            blocks[1].tasks[0].name = 'Обновить сайт';
             $mol_assert_like(model.data(), blocks);
         },
         'Удалить задачу'() {

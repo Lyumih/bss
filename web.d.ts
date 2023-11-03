@@ -2942,14 +2942,29 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    class $mol_icon_tick extends $mol_icon {
+        path(): string;
+    }
+}
+
+declare namespace $ {
+    class $mol_check_box extends $mol_check {
+        Icon(): $mol_icon_tick;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
     class $bss_task_deck extends $mol_row {
         sub(): readonly any[];
         block_status(id: any): string;
         add_task(id: any, next?: any): any;
         remove_block(id: any, next?: any): any;
-        blocks(): readonly any[];
-        task_name(id: any): string;
-        edit_task(id: any, next?: any): any;
+        blocks(): Record<string, any>;
+        selected(id: any, next?: any): string;
+        task_name(id: any, next?: any): string;
         remove_task(id: any, next?: any): any;
         Task(id: any): $$.$bss_task_deck_task;
         task_list(id: any): readonly any[];
@@ -2977,18 +2992,18 @@ declare namespace $ {
         Content(): $$.$mol_list;
     }
     class $bss_task_deck_task extends $mol_row {
-        blocks(): readonly any[];
-        edit(next?: any): any;
         sub(): readonly any[];
-        task_name(): string;
+        task_name(next?: any): string;
         Task(): $$.$mol_text;
+        Edit_task(): $$.$mol_string;
+        select(next?: any): string;
+        blocks(): Record<string, any>;
+        Move(): $$.$mol_select;
+        edit_list(): readonly any[];
+        Edit_list(): $$.$mol_list;
+        edit_checked(next?: any): boolean;
         Edit_icon(): $mol_icon_edit;
-        block_name(id: any): string;
-        edit_task(id: any, next?: any): any;
-        Block(id: any): $mol_button_minor;
-        block_list(): readonly any[];
-        Block_select(): $$.$mol_list;
-        Edit(): $$.$mol_pick;
+        Edit(): $mol_check_box;
         Remove_icon(): $mol_icon_delete;
         remove(next?: any): any;
         Remove(): $mol_button_minor;
@@ -3018,6 +3033,7 @@ declare namespace $.$$ {
         add_task(id: string, value: string): void;
         remove_task(block_id: string, task_id: string): void;
         edit_task(block_id: string, task_id: string, target_block_id: string): void;
+        move_task(block_id: string, task_id: string, target_block_id: string): void;
     }
 }
 
@@ -3031,22 +3047,19 @@ declare namespace $.$$ {
         remove_block(next?: any): void;
         task_list(id: string): readonly $mol_view[];
         get_task(id: string): $bss_task_deck_model_Task | undefined;
-        task_name(id: string): string;
+        task_name(id: string, next?: string): string;
         add_task(id: string, value: string): void;
         remove_task(id: string): void;
         blocks(): {
-            id: string;
-            name: string;
-        }[];
-        edit_task(id: string, next: string): void;
+            [id: string]: string;
+        };
+        selected(id: string, next?: string): string;
     }
     class $bss_task_deck_block extends $.$bss_task_deck_block {
         add_new(): void;
     }
     class $bss_task_deck_task extends $.$bss_task_deck_task {
-        block_list(): readonly $mol_view[];
-        block_name(id: string): any;
-        edit_task(id: string): void;
+        edit_list(): readonly any[];
     }
 }
 
