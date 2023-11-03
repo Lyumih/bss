@@ -11104,37 +11104,8 @@ var $;
                 return this.$.$mol_state_local.value(this.data_key(), next);
             }
             data_fetch() {
-                return [
-                    {
-                        id: crypto.randomUUID(),
-                        name: 'В ожидании',
-                        tasks: [
-                            {
-                                id: crypto.randomUUID(),
-                                name: 'Создать сайт по макету',
-                            },
-                            {
-                                id: crypto.randomUUID(),
-                                name: 'Разработать дизайн геля для бритья'
-                            }
-                        ]
-                    },
-                    {
-                        id: crypto.randomUUID(),
-                        name: 'В процессе',
-                        tasks: [
-                            {
-                                id: crypto.randomUUID(),
-                                name: 'Разместить сайт на сервере',
-                            }
-                        ]
-                    },
-                    {
-                        id: crypto.randomUUID(),
-                        name: 'Готовые',
-                        tasks: []
-                    }
-                ];
+                const url = 'https://raw.githubusercontent.com/Lyumih/bss/master/back/api/v1/task/task.json';
+                return this.$.$mol_fetch.json(url) || [];
             }
             generate_id() {
                 return crypto.randomUUID();
